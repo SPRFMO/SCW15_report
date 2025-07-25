@@ -1,0 +1,84 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "index.qmd"
+    # - "doc/A_mp_def.qmd"
+    # - "doc/A_notes.qmd"
+    # - "doc/A_tutorial.qmd"
+
+engine: knitr  # Moved to root level
+
+website:
+  # prefer-html: true  # REMOVED (deprecated)
+  page-navigation: true
+  title: "SCW15 Report"
+  navbar:
+    logo: images/logo.png
+    left:
+      - href: index.qmd
+        text: Home
+      # - href: doc/A_mp_def.qmd
+      #   text: MP controls
+  site-url: "https://sprfmo.github.io/scw15"
+  repo-url: "https://github.com/sprfmo/scw15"
+  repo-actions: [edit, source, issue]
+  favicon: images/logo.png
+  
+  sidebar:
+    logo: "https://sprfmo.github.io/scw15/images/logo.png"
+    favicon: images/favicon.ico
+    pinned: true
+    align: center
+    tools: 
+      - icon: github
+        href: https://github.com/sprfmo/scw15
+        text: "SCW15 workshop report"
+    style: "docked"
+    search: true
+    collapse-level: 0
+    contents:
+      - href: index.qmd
+        text: Overview
+
+format:
+  html:
+    lightbox: true  # MOVED here
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    include-in-header:
+      text: |
+        <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['\\(', '\\)'], ['$', '$']],
+            displayMath: [['\\[', '\\]'], ['$$', '$$']],
+            processEscapes: true
+          }
+        };
+        </script>
+    theme:
+      light: [cosmo] 
+      dark: [darkly]
+    code-copy: true
+    code-overflow: wrap
+    toc: true
+    toc-title: 'Contents'
+    toc-location: left
+    fig-cap-location: margin
+    tbl-cap-location: margin
+    embed-resources: true
+    code-summary: "Show the code"
+    code-fold: true
+
+  pdf:
+    documentclass: scrreprt
+    papersize: letter
+    header-includes:
+      - \counterwithout{figure}{chapter}
+
+date: now
+date-format: "YYYY-MM-DD HH:mm"
+css: mystyle.css
+bibliography: references.bib
