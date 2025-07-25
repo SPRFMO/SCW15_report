@@ -96,6 +96,18 @@ management priorities.
 
 # Introduction
 
+Management Strategy Evaluation (MSE) has emerged as a critical tool for fisheries
+management, especially in contexts where data are limited or uncertainty 
+is high. Foundational software frameworks like FLR were developed to 
+facilitate reproducible, cross-disciplinary evaluation of management strategies 
+through simulation and decision analysis [@Kell2007FLR]. Building on this 
+foundation, recent advances have expanded FLR’s capacity for data-rich and 
+data-limited systems alike, improving accessibility and integration with 
+other tools [@Hillary2023FLR]. Complementing these developments, a structured 
+framework for evaluating methods and risk in data-limited fisheries has been 
+proposed, providing practical guidance on the application of MSE in real-world 
+settings [@Carruthers2023].
+
 The SCW15 Jack Mackerel MSE Technical Workshop was convened in response
 to the Scientific Committee’s request for progress on developing and
 evaluating management procedures (MPs) for jack mackerel under the
