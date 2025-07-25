@@ -118,6 +118,7 @@ outputs ahead of Scientific Committee and Commission review.
 
 ```{r }
 #| echo: false
+#| eval: false
 #| warning: false
 #| message: false
 #| error: false
