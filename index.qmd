@@ -1269,22 +1269,6 @@ sloperatio = 0.2
 → lim = 0.2, bufflow = 0.3, buffupp = 0.5 So the response curve looks
 like:
 
-``` plaintext
-   |
- ↑ |        /
-h  |       /
-c  |------•-------•------
-r  |     /         \
-m  |    /           \
-    |___|___________|____
-       lim  bufflow buffupp   → depletion (m)
-```
-
-📈 Suggestion: Plot Response Curve
-
-Here’s R code to visualize the multiplier hcrm across a range of input
-metric values:
-
 ```{r}
 #| label: plot_hcrm
 plot_hcrm <- function(target = 0.4, width = 0.1, sloperatio = 0.2, metric_range = seq(0, 1, 0.01)) {
