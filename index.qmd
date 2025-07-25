@@ -1304,7 +1304,6 @@ plot_hcrm(target = 0.4, width = 0.1, sloperatio = 0.2)
 This shows the piecewise nature of the multiplier and can be tailored to
 any input metric (depletion, zscore, etc.).
 
-xxxxxxx
 
 ## Overview of cpuescore
 

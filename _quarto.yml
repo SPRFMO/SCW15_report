@@ -39,7 +39,7 @@ website:
     collapse-level: 0
     contents:
       - href: index.qmd
-        text: Overview
+        text: Report
 
 format:
   html:
