@@ -20,19 +20,19 @@ website:
         text: Home
       # - href: doc/A_mp_def.qmd
       #   text: MP controls
-  site-url: "https://sprfmo.github.io/scw15"
-  repo-url: "https://github.com/sprfmo/scw15"
+  site-url: "https://sprfmo.github.io/SCW15_report"
+  repo-url: "https://github.com/sprfmo/SCW15_report"
   repo-actions: [edit, source, issue]
   favicon: images/logo.png
   
   sidebar:
-    logo: "https://sprfmo.github.io/scw15/images/logo.png"
+    logo: "https://sprfmo.github.io/SCW15_report/images/logo.png"
     favicon: images/favicon.ico
     pinned: true
     align: center
     tools: 
       - icon: github
-        href: https://github.com/sprfmo/scw15
+        href: https://github.com/sprfmo/SCW15_report
         text: "SCW15 workshop report"
     style: "docked"
     search: true
