@@ -37,9 +37,9 @@ website:
     style: "docked"
     search: true
     collapse-level: 0
-    contents:
-      - href: index.qmd
-        text: Report
+    # contents:
+      # - href: index.qmd
+        # text: Report
 
 format:
   html:
@@ -79,6 +79,6 @@ format:
       - \counterwithout{figure}{chapter}
 
 date: now
-date-format: "YYYY-MM-DD HH:mm"
+date-format: "YYYY-MM-DD"
 css: mystyle.css
 bibliography: references.bib
