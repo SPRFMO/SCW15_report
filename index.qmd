@@ -201,19 +201,23 @@ The following sections detail the discussion on how best to incorporate
 some environmental effects for projecting from the operating model.
 Specifically, we considered how to account for the effects of El Niño on
 recruitment and catchability/availability.
+We follow this with a sections reviewing the OM and then some results from 
+applying existing and refined MPs. We conclude with a set of recommendations for 
+the SC to consider.
 
-# Simulated El Niño Effects in the Operating Model
+# Simulating El Niño effects in the Operating Model
 
-To incorporate climate-driven variability into the Operating Model (OM),
-we define a scenario simulating El Niño–like events every five years
+To incorporate climate-driven variability into the Operating Model (OM)
+projections, we defined a scenario simulating El Niño–like events every five years
 beginning in 2030. These events affect primarily recruitment and
-distribution options. The analysts also proposed biological and fishery
-processes for El Niño conditions. The group discussed these and noted
+distribution options. Based on the work of Iago and available literature, we
+proposed biological and fishery
+processes that may relate to El Niño conditions. The group discussed these and noted
 that they could be evaluated in the next round of stock assessment
-benchmark and MSE work.
+benchmark and for future MSE work.
 
 The table below summarizes the proposed effects of simulated El Niño
-conditions on the Operating Model (OM), categorizing them by their
+conditions on the OM, categorizing them by their
 expected direction, biological or fishery-based justification, and
 evaluation priority. The table is divided into two sections: effects
 that are prioritized for immediate evaluation and those deferred for
@@ -338,10 +342,10 @@ the relative abundance indicators in index values. These reflect
 patterns over the past two decades, possibly due to environmental
 changes.
 
-# Review of the OM specifications
+# Review of the Operating Model specifications
 
-The workshop reviewed the current specifications of the Operating Models
-(OMs). In particular, the assumptions for the reference point
+The workshop reviewed the current specifications of the 
+OMs. In particular, the assumptions for the reference point
 calculations were discusssed and contrasted with the 2024 assessment
 results and reports (@sprfmo2024annex7). Due to the terminal (2024)
 estimates of fisheries selectivities, the assessment report had
@@ -354,7 +358,7 @@ likely upward bias in $F_{{MSY}}$ estimates caused by strong selection
 on older fish. As a result, the Scientific Committee recommended
 constraining the 2025 TAC to be at or below 1,428 kt, representing only
 a 15% increase from 2024 levels and aligned with the Commission’s
-guidance. In developing the Operating Model (OM), reference points such
+guidance. In developing the OM, reference points such
 as $F_{{MSY}}$ were instead based on longer-term averages to avoid the
 influence of short-term variability or cohort effects, ensuring more
 stable and precautionary management advice consistent with the MSE
@@ -390,16 +394,7 @@ discussion on narrowing MP options. Depending on this direction, it may
 mean that such a meeting would have to occur after February 2026 and the
 Commission meeting.
 
-Participants were encouraged to document their activities during the
-workshop, including the methods explored and tuning targets used. Work
-tasked identified included:
 
--   **Jim** evaluated 9 MPs (including `bufferdelta2`, `cpuescore2`,
-    test acoustic, and combinations of CPUE indices with different
-    `delta_TAC` values), all tuned to achieve 60% green status.
-
--   **Jose/Chile** apply shortcut tuning methods to reach similar green
-    zone targets.
 
 ### Software and Technical Recommendations
 
@@ -489,6 +484,23 @@ Planned products:
 
 -   Identify successor strategy after contract ends in 2025.
 
+# Jack mackerel MSE workplan
+
+## Near term
+
+Participants were encouraged to document their activities during the
+workshop, including the methods explored and tuning targets used. Work
+tasked identified included:
+
+-   **Jim** evaluated 9 MPs (including `bufferdelta2`, `cpuescore2`,
+    test acoustic, and combinations of CPUE indices with different
+    `delta_TAC` values), all tuned to achieve 60% green status.
+
+-   **Jose/Chile** apply shortcut tuning methods to reach similar green
+    zone targets.
+    
+## Medium term
+
 ### Summary Table: MP Methods and Configuration
 
 | Year | Method | Metric | Tuning Parameter | Other Parameters | Score Index | Comments |
@@ -515,7 +527,7 @@ fig-align="center"}
 
 # Appendix B, Agenda {#app-agenda .unnumbered}
 
-1.  **Welcome and Introduction** (5 minutes)\
+1.  **Welcome and Introduction** \
     *Objective*: Set the stage for the focused discussion on Jack
     Mackerel MSE progress and future directions.\
     *Note*: Briefly introduced the MSE as a tool for sustainable
@@ -523,37 +535,37 @@ fig-align="center"}
     historical fluctuations in jack mackerel stock and exploitation
     levels.
 
-2.  **Current Status of Jack Mackerel MSE Work** (10 minutes)\
+2.  **Current Status of Jack Mackerel MSE Work** \
     *Objective*: Provide a concise update on progress, including
-    advancements in Operating Models (OMs) and MP testing.\
+    advancements in OMs and MP testing.\
     *Note*: MSE development has progressed rapidly. Updates include new
     data inputs, refinements from the SCW14 benchmark, and expanded
     uncertainty axes. MPs are under active testing.
 
-3.  **Review of Candidate MPs and Tuning Results** (30 minutes)\
+3.  **Review of Candidate MPs and Tuning Results** \
     *Objective*: Discuss MP structure, indicator choices, and
     implications of tuning to achieve target performance criteria.\
     *Note*: Focused on empirical MPs using CPUE and acoustic indices.
     Tuning challenges under high biomass conditions were highlighted.
 
-4.  **Robustness Scenarios and Specification Refinement** (30 minutes)\
+4.  **Robustness Scenarios and Specification Refinement** \
     *Objective*: Finalize the list of scenarios for robustness testing.\
     *Note*: Scenarios included El Niño-like variability, availability
     shifts, and alternative stock structures. Their role as comparative
     stress tests was reaffirmed.
 
-5.  **Evaluation Metrics and Visualization Tools** (20 minutes)\
+5.  **Evaluation Metrics and Visualization Tools** \
     *Objective*: Review tools for comparing MP performance.\
     *Note*: Emphasis on visual summaries, including Kobe plots,
     probability tiles, and trade-off diagrams.
 
-6.  **Feedback from External Experts** (15 minutes)\
+6.  **Feedback from External Experts** \
     *Objective*: Integrate external review findings and technical
     suggestions.\
     *Note*: Dr. Parma’s input emphasized realistic assumptions,
     consistent reference points, and long-term performance evaluation.
 
-7.  **Wrap-up and Next Steps** (10 minutes)\
+7.  **Wrap-up and Next Steps** \
     *Objective*: Identify action items and prepare for upcoming
     reporting deadlines.\
     *Note*: Plans were set for refining MPs, running full simulations,
@@ -815,7 +827,7 @@ fig-align="center"}
 
 ### Next Steps and Action Items
 
--   Agreement to refine the operating model (OM) and finalize Annex
+-   Agreement to refine the OM projections and finalize Annex
     documentation on selectivity and other specifications.
 
 -   Plan to continue testing and tuning MPs, with further analysis of
@@ -856,7 +868,7 @@ fig-align="center"}
 -   Code Review and Live Demonstration:
 
     -   Live coding sessions were held to demonstrate how to adjust the
-        operating model (OM) to exclude problematic years (e.g.,
+        OM to exclude problematic years (e.g.,
         dropping 2024 and extending from 2023).
 
     -   Smoothing techniques for selectivity and weights at age were
@@ -1154,7 +1166,7 @@ This framework enables:
 
 -   Transparent comparisons across MPs
 
--   Flexible integration with simulated operating models (OMs)
+-   Flexible integration with simulated operating models 
 
 By separating each component of an MP into a function-object pair, the
 `mse` package supports reproducible, configurable, and extensible MSE
