@@ -1,0 +1,25 @@
+name: Render and Deploy Quarto to docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render index.qmd
+        run: quarto render index.qmd --output-dir docs
+
+      - name: Commit and push rendered site
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git commit -m "Build site" || echo "No changes to commit"
+          git push
