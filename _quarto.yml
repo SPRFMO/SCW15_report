@@ -3,47 +3,89 @@ project:
   output-dir: docs
   render:
     - "index.qmd"
-    # - "doc/A_mp_def.qmd"
-    # - "doc/A_notes.qmd"
-    # - "doc/A_tutorial.qmd"
+    - "doc/App_A.qmd"
+    - "doc/App_B.qmd"
+    - "doc/App_C.qmd"
+    - "doc/App_D.qmd"
+    - "doc/App_E.qmd"
 
-engine: knitr  # Moved to root level
+engine: knitr
 
 website:
-  # prefer-html: true  # REMOVED (deprecated)
-  page-navigation: true
-  title: "SCW15 Report"
-  navbar:
-    logo: images/logo.png
-    left:
-      - href: index.qmd
-        text: Home
-      # - href: doc/A_mp_def.qmd
-      #   text: MP controls
-  site-url: "https://sprfmo.github.io/SCW15_report"
-  repo-url: "https://github.com/sprfmo/SCW15_report"
-  repo-actions: [edit, source, issue]
-  favicon: images/logo.png
-  
+  # favicon: images/logo.png
   sidebar:
-    logo: "https://sprfmo.github.io/SCW15_report/images/logo.png"
-    favicon: images/favicon.ico
     pinned: true
-    align: center
+    search: true
+    collapse-level: 0
     tools: 
+      - icon: images/logo.png
+        href: https://sprfmo.int
       - icon: github
         href: https://github.com/sprfmo/SCW15_report
         text: "SCW15 workshop report"
-    style: "docked"
-    search: true
-    collapse-level: 0
-    # contents:
-      # - href: index.qmd
-        # text: Report
+    contents:
+      - href: index.qmd
+        text: Report
+      - section: "Appendices"
+        contents:
+          - href: doc/App_A.qmd
+            text: Participants
+          - href: doc/App_B.qmd
+            text: Agenda
+          - href: doc/App_C.qmd
+            text: Minutes
+          - href: doc/App_D.qmd
+            text: External experts
+          - href: doc/App_E.qmd
+            text: Misc. notes
+      - section: "Other formats"
+        contents:
+          - file: index.pdf
+            text: SCW15 PDF
+          - file: index.epub
+            text: SCW15 EPUB
+          - file: index.docx
+            text: SCW15 Word
+#             
+# website:
+#   page-navigation: true
+#   title: "SCW15 Report"
+#   site-url: "https://sprfmo.github.io/SCW15_report"
+#   repo-url: "https://github.com/sprfmo/SCW15_report"
+#   repo-actions: [edit, source, issue]
+#   favicon: images/logo.png
+# 
+#   sidebar:
+#     logo: images/logo.png   # shows logo in top left corner
+#     pinned: true
+#     align: left
+#     search: true
+#     collapse-level: 0
+#     tools: 
+#       - icon: github
+#         href: https://github.com/sprfmo/SCW15_report
+#         text: "SCW15 workshop report"
+#     contents:
+#       - href: index.qmd
+#         text: Report
+#       - section: "Appendices"
+#         contents:
+#           - href: doc/App_A.qmd
+#             text: Participants
+#           - href: doc/App_B.qmd
+#             text: Agenda
+#           - href: doc/App_C.qmd
+#             text: Minutes
+#           - href: doc/App_D.qmd
+#             text: External experts
+#           - href: doc/App_E.qmd
+#             text: Misc. notes
 
 format:
   html:
-    lightbox: true  # MOVED here
+    title-block-banner: true   # shows title & logo at the top
+    title-block-style: none    # disables default banner styling
+    lightbox: true
     html-math-method:
       method: mathjax
       url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -65,7 +107,7 @@ format:
     code-overflow: wrap
     toc: true
     toc-title: 'Contents'
-    toc-location: left
+    toc-location: right
     fig-cap-location: margin
     tbl-cap-location: margin
     embed-resources: true

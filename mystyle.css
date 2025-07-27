@@ -3,3 +3,8 @@
   padding: 10px;
   border-radius: 5px;
 }
+/* Adjust logo size in sidebar */
+.sidebar-logo img {
+  max-height: 30px !important; /* or your preferred size */
+  width: auto;      /* maintain aspect ratio */
+}
