@@ -1,0 +1,52 @@
+---
+title:  Appendix B, Agenda 
+format: 
+  html:
+    embed-resources: true
+# {#app-agenda .unnumbered}
+---
+
+1.  **Welcome and Introduction** \
+    *Objective*: Set the stage for the focused discussion on Jack
+    Mackerel MSE progress and future directions.\
+    *Note*: Briefly introduced the MSE as a tool for sustainable
+    fisheries management, emphasizing its importance given the
+    historical fluctuations in jack mackerel stock and exploitation
+    levels.
+
+2.  **Current Status of Jack Mackerel MSE Work** \
+    *Objective*: Provide a concise update on progress, including
+    advancements in OMs and MP testing.\
+    *Note*: MSE development has progressed rapidly. Updates include new
+    data inputs, refinements from the SCW14 benchmark, and expanded
+    uncertainty axes. MPs are under active testing.
+
+3.  **Review of Candidate MPs and Tuning Results** \
+    *Objective*: Discuss MP structure, indicator choices, and
+    implications of tuning to achieve target performance criteria.\
+    *Note*: Focused on empirical MPs using CPUE and acoustic indices.
+    Tuning challenges under high biomass conditions were highlighted.
+
+4.  **Robustness Scenarios and Specification Refinement** \
+    *Objective*: Finalize the list of scenarios for robustness testing.\
+    *Note*: Scenarios included El Niño-like variability, availability
+    shifts, and alternative stock structures. Their role as comparative
+    stress tests was reaffirmed.
+
+5.  **Evaluation Metrics and Visualization Tools** \
+    *Objective*: Review tools for comparing MP performance.\
+    *Note*: Emphasis on visual summaries, including Kobe plots,
+    probability tiles, and trade-off diagrams.
+
+6.  **Feedback from External Experts** \
+    *Objective*: Integrate external review findings and technical
+    suggestions.\
+    *Note*: Dr. Parma’s input emphasized realistic assumptions,
+    consistent reference points, and long-term performance evaluation.
+
+7.  **Wrap-up and Next Steps** \
+    *Objective*: Identify action items and prepare for upcoming
+    reporting deadlines.\
+    *Note*: Plans were set for refining MPs, running full simulations,
+    and summarizing results in a format accessible to decision-makers.
+

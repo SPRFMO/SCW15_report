@@ -1,0 +1,660 @@
+---
+title: Appendix E. Notes on the Jack Mackerel MSE Framework 
+format: 
+  html:
+    embed-resources: true
+# Appendix E. Notes on the Jack Mackerel MSE Framework {#app-notes .unnumbered}
+---
+
+
+
+This document summarizes the structure and behavior of key objects used
+in the **jmMSE** Management Strategy Evaluation (MSE) framework for
+SPRFMO Jack Mackerel. It documents the modeling components (`h1`, `om`,
+`perf`), performance calculations, and the use of `getSlick()` and
+`FLslick()` to generate evaluation plots.
+
+## Defining Management Procedures using `mpCtrl` and `mseCtrl`
+
+In the `mse` package, Management Procedures (MPs) are constructed as
+modular sequences of functional components that simulate how a fishery
+would be managed under alternative strategies. These strategies are
+defined using `mpCtrl`, which organizes component modules defined via
+`mseCtrl`.
+
+This modular design allows you to:
+
+-   Select estimation methods for stock status (`est`)
+
+-   Define harvest control rules (`hcr`, `phcr`)
+
+-   Simulate implementation systems (`isys`)
+
+-   Include optional technical measures (`tm`)
+
+### Structure of `mpCtrl`
+
+The `mpCtrl()` constructor takes a named list of components. Each
+component must be an `mseCtrl` object that defines the function to use
+(`method`) and its input parameters (`args`).
+
+```{r}
+#| eval: FALSE
+ctrl <- mpCtrl(list(
+  est = mseCtrl(method = shortcut.sa, args = list(
+    metric = "depletion",
+    devs = metdevs,
+    B0 = refpts(om)$SB0
+  )),
+  hcr = mseCtrl(method = buffer.hcr, args = list(
+    target  = 1000,
+    bufflow = 0.30,
+    buffupp = 0.50,
+    lim     = 0.10,
+    min     = 0,
+    metric  = "depletion"
+  )),
+  isys = mseCtrl(method = split.is, args = list(
+    split = catch_props(om)$last5
+  ))
+))
+```
+
+### Explanation of Components
+
+| Component | Description |
+|------------------------------------|------------------------------------|
+| `est` | The estimator module determines how the stock status is assessed during each management cycle. |
+| `hcr` | The harvest control rule uses the estimated status to recommend a total allowable catch or effort level. |
+| `phcr` | (Optional) Parametrization helper for complex or adaptive control rules. |
+| `isys` | Simulates how the recommended catch is implemented across fleets, often using historical proportions or allocation logic. |
+| `tm` | (Optional) Includes non-catch-based rules, such as minimum size limits or gear restrictions. |
+
+### Common `method` and `args` Options
+
+| Component | Example `method` | Common `args` |
+|------------------------|------------------------|------------------------|
+| `est` | `perfect.sa`, `shortcut.sa` | `metric`, `devs`, `B0`, `years` |
+| `hcr` | `buffer.hcr`, `hockeystick.hcr`, `trend.hcr` | `target`, `lim`, `bufflow`, `buffupp`, `trigger`, `metric` |
+| `isys` | `split.is`, `fixed.is` | `split`, `noise`, `bias` |
+| `tm` | user-defined | size or spatial constraints |
+
+### Example: Building an `mseCtrl` for a Harvest Control Rule
+
+Each `mseCtrl` specifies a method function and its arguments.
+
+```{r}
+#| eval: FALSE
+ctl <- mseCtrl(
+  method = buffer.hcr,
+  args = list(
+    target  = 1000,
+    bufflow = 0.30,
+    buffupp = 0.50,
+    lim     = 0.10,
+    min     = 0,
+    metric  = "depletion"
+  )
+)
+```
+
+### Accessor Functions
+
+You can programmatically access or modify components of an `mpCtrl`
+object:
+
+```{r}
+#| eval: FALSE
+# Access or change the HCR method
+method(ctrl@hcr)
+
+# Update the target biomass value
+args(ctrl@hcr)$target <- 1200
+```
+
+Alternatively, use accessor functions:
+
+```{r}
+#| eval: FALSE
+hcr(ctrl) <- mseCtrl(method = new.hcr, args = list(...))
+args(ctrl, "hcr")$target <- 1100
+```
+
+------------------------------------------------------------------------
+
+### Summary
+
+This framework enables:
+
+-   Rapid prototyping of management strategies
+
+-   Transparent comparisons across MPs
+
+-   Flexible integration with simulated operating models 
+
+By separating each component of an MP into a function-object pair, the
+`mse` package supports reproducible, configurable, and extensible MSE
+design workflows.
+
+To analyze the behavior of bufferdelta.hcr() over the range of index
+values used as input (i.e., the stock status metric like “depletion” or
+“zscore”), the key output to examine is the harvest control multiplier
+hcrm—which determines how much the TAC is adjusted relative to the
+previous TAC. This multiplier is a piecewise function of the index value
+at the data year.
+
+### Harvest Control Rule (HCR) with Buffer Delta
+
+This HCR formulation uses a smoothed transition based on a buffer zone
+around a biomass or metric `target`. The response scalar $h(m)$, applied
+to the previous catch, is defined based on the relative metric value $m$
+(e.g., standardized index or depletion level), and follows a piecewise
+logic:
+
+Let:
+
+-   $m$: observed metric (e.g., index value)
+-   $t$: target level
+-   $w$: buffer width
+-   $l = t - 2w$: limit threshold
+-   $b_{\text{low}} = t - w$: buffer lower bound
+-   $b_{\text{upp}} = t + w$: buffer upper bound
+-   $r$: slope ratio
+
+Then the Harvest Control Rule (HCR) response multiplier $h(m)$ is:
+
+$$
+h(m) = 
+\begin{cases}
+\frac{1}{2} \left(\frac{m}{l}\right)^2, & \text{if } m \leq l \\
+\frac{1}{2} \left(1 + \frac{m - l}{b_{\text{low}} - l} \right), & \text{if } l < m < b_{\text{low}} \\
+1, & \text{if } b_{\text{low}} \leq m < b_{\text{upp}} \\
+1 + r \cdot \frac{1}{2(b_{\text{low}} - l)} (m - b_{\text{upp}}), & \text{if } m \geq b_{\text{upp}} \\
+\end{cases}
+$$
+
+The resulting Total Allowable Catch (TAC) is calculated as:
+
+$$
+\text{TAC}_{\text{new}} = \text{TAC}_{\text{previous}} \cdot h(m)
+$$
+
+Optional constraints on TAC changes can be applied:
+
+$$
+\text{TAC}_{\text{new}} = \min(\text{TAC}_{\text{new}}, \text{TAC}_{\text{previous}} \cdot d_{\text{upp}})
+$$
+
+$$
+\text{TAC}_{\text{new}} = \max(\text{TAC}_{\text{new}}, \text{TAC}_{\text{previous}} \cdot d_{\text{low}})
+$$
+
+### 🔁 Behavior Summary
+
+Let’s denote:
+
+$m$: index metric (e.g., depletion) at the data year
+
+$\text{target}$: central value, e.g., 0.5
+
+$\text{width}$: buffer width, e.g., 1.0
+
+Then:
+
+$\text{bufflow} = \text{target} - \text{width}$
+
+$\text{buffupp} = \text{target} + \text{width}$
+
+$\text{lim} = \text{target} - 2 \cdot \text{width}$
+
+#### 🧭 HCR behavior across index values
+
+| Index value $m$ | Description | Multiplier h(m) | TAC behavior |
+|------------------|------------------|------------------|------------------|
+| $m \leq \text{lim}$ | Very low index | Quadratic increase from 0 → 0.5 | Strong reduction |
+| $\text{lim} < m < \text{bufflow}$ | Between limit and lower buffer | Linear rise from 0.5 to 1 | Moderate reduction |
+| $\text{bufflow} \leq m < \text{buffupp}$ | Within buffer zone | Flat at 1 | No change |
+| $m \geq \text{buffupp}$ | Above upper buffer | Linear increase starting at 1 (slope = sloperatio) | Moderate increase |
+
+#### 🔎 Example with Default Parameters
+
+If you use the defaults:
+
+target = 0.5
+
+width = 1
+
+sloperatio = 0.2
+
+Then:
+
+```         
+•   bufflow = -0.5, buffupp = 1.5, lim = -1.5
+
+•   The flat zone is from -0.5 to 1.5 (note: with depletion metric, this wide range makes sense for standardized metrics like z-scores, but not raw depletion)
+```
+
+If using depletion as the metric, you’d typically want:
+
+target = 0.4
+
+width = 0.1
+
+sloperatio = 0.2
+
+→ lim = 0.2, bufflow = 0.3, buffupp = 0.5 So the response curve looks
+like:
+
+```{r}
+#| label: plot_hcrm
+plot_hcrm <- function(target = 0.4, width = 0.1, sloperatio = 0.2, metric_range = seq(0, 1, 0.01)) {
+  bufflow <- target - width
+  buffupp <- target + width
+  lim <- target - 2 * width
+
+  hcrm <- ifelse(metric_range <= lim,
+    ((metric_range / lim)^2) / 2,
+    ifelse(metric_range < bufflow,
+      0.5 * (1 + (metric_range - lim) / (bufflow - lim)),
+      ifelse(metric_range < buffupp,
+        1,
+        1 + sloperatio * 1 / (2 * (bufflow - lim)) * (metric_range - buffupp)
+      )
+    )
+  )
+
+  plot(metric_range, hcrm,
+    type = "l", col = "blue", lwd = 2,
+    xlab = "Metric (e.g., depletion)", ylab = "Harvest multiplier (hcrm)",
+    main = "Response of TAC to Index Metric"
+  )
+  abline(h = 1, col = "gray", lty = 2)
+  abline(v = c(lim, bufflow, buffupp), col = "red", lty = 3)
+}
+plot_hcrm(target = 0.4, width = 0.1, sloperatio = 0.2)
+```
+
+This shows the piecewise nature of the multiplier and can be tailored to
+any input metric (depletion, zscore, etc.).
+
+
+## Overview of cpuescore
+
+In the jmMSE framework, different CPUE scoring functions are used to
+inform harvest control rules (HCRs). These functions standardize or
+compare CPUE time series across simulations and reference periods. The
+three primary scoring methods are:
+
+-   `cpuescore.z`
+-   `cpuescore.mean`
+-   `cpuescore.level`
+
+------------------------------------------------------------------------
+
+## 1. Z-score Standardization: `cpuescore.z`
+
+This method standardizes the CPUE values by subtracting the mean and
+dividing by the standard deviation across simulations:
+
+$$
+\text{score}_{i,t} = \frac{\text{CPUE}_{i,t} - \mu_t}{\sigma_t}
+$$
+
+Where:
+
+$\mu_t$ = mean CPUE in year $t$ across simulations
+
+$\sigma_t$ = standard deviation in year $t$ across simulations
+
+This produces a unitless, centered score:
+
+```{r}
+#| eval: FALSE
+score <- (met[, ac(dy[i])] %-% yearMeans(ref)) %/% sqrt(yearVars(ref))
+```
+
+Useful when you want to assess relative anomalies in CPUE from expected
+trends.
+
+⸻
+
+## 2. Mean Ratio: cpuescore.mean
+
+This method compares the mean CPUE in recent years (dy) to a reference
+mean CPUE: $$
+\text{score}_i = \frac{\bar{\text{CPUE}}_{dy, i}}{\bar{\text{CPUE}}_{ref, i}}
+$$ This is a relative index level and is not standardized:
+
+```{r}
+#| eval: FALSE
+score <- yearMeans(met[, ac(dy[i])]) %/% yearMeans(ref)
+```
+
+Often used when absolute differences in mean CPUE should affect TAC
+decisions.
+
+## 3. Raw Index: cpuescore.level
+
+This method passes through the CPUE values with no transformation:
+
+$$
+\text{score}_{i,t} = \text{CPUE}_{i,t}
+$$
+
+```{r}
+#| eval: FALSE
+score <- met[, ac(dy[i])]
+```
+
+Used when raw or smoothed CPUE indices are deemed directly interpretable
+and comparable.
+
+## Example: Simulated Scores
+
+The following example shows how the three `cpuescore` methods behave
+using simulated CPUE data across 100 simulations and 10 years.
+
+```{r}
+#| message: false
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Simulate CPUE data
+set.seed(42)
+n_sim <- 100
+n_year <- 10
+ind_sim <- matrix(rlnorm(n_sim * n_year, meanlog = log(1), sdlog = 0.2), nrow = n_sim)
+
+# Reference: all years; "recent" period: years 9-10
+ref_mean <- rowMeans(ind_sim)
+ref_sd <- apply(ind_sim, 1, sd)
+
+z_scores <- (ind_sim[, 10] - ref_mean) / ref_sd
+mean_scores <- rowMeans(ind_sim[, 9:10]) / ref_mean
+raw_scores <- ind_sim[, 10]
+
+# Reshape for plotting
+score_df <- tibble(
+  sim = 1:n_sim,
+  z = z_scores,
+  mean = mean_scores,
+  level = raw_scores
+) %>% pivot_longer(cols = -sim, names_to = "score_type", values_to = "score")
+
+ggplot(score_df, aes(x = sim, y = score)) +
+  geom_line() +
+  # facet_wrap(~score_type, scales = "free_y") +
+  facet_wrap(~score_type) +
+  labs(
+    title = "Simulated CPUE Score Types",
+    x = "Simulation",
+    y = "Score Value"
+  ) +
+  theme_minimal()
+```
+
+## Summary
+
+The indices were refactored from the `cpuescore` functions to avoid
+confusion with surveys and can be summarized as follows:
+
+| Function | Description | Normalized | Use case |
+|------------------|------------------|------------------|------------------|
+| `indscore.z` | Standardize vs mean/sd | ✅ | Compare anomalies across sims |
+| `indscore.mean` | Mean ratio of dy vs ref | ❌ | Index levels matter |
+| `indscore.level` | Raw CPUE values used as-is | ❌ | When index is well-calibrated |
+
+⸻
+
+```{r}
+#| eval: FALSE
+indscore.z <- function(
+    stk, idx, index = 1, dlag = rep(args$data_lag, length(index)),
+    refyrs = NULL, args, tracking) {
+  dlag <- setNames(dlag, nm = names(idx)[index])
+  ay <- args$ay
+  dy <- ay - dlag
+  res <- as.list(setNames(nm = names(idx)[index]))
+
+  for (i in names(res)) {
+    met <- window(idx[[i]], end = dy[i]) # removed biomass()
+
+    ref <- if (!is.null(refyrs)) met[, ac(refyrs)] else met
+
+    res[[i]] <- (met[, ac(dy[i])] %-% yearMeans(ref)) %/% sqrt(yearVars(ref))
+
+    dimnames(res[[i]])$year <- max(dy)
+
+    track(tracking, paste0("score.mean.", i), ac(ay)) <- yearMeans(ref)
+    track(tracking, paste0("score.sd.", i), ac(ay)) <- sqrt(yearVars(ref))
+    track(tracking, paste0("score.ind.", i), ac(ay)) <- res[[i]]
+  }
+
+  return(list(stk = stk, ind = res, tracking = tracking, cpue = met))
+}
+bufferdelta.hcr <- function(stk, ind, target = 0.5, width = 1,
+                            sloperatio = 0.2, dupp = NULL, dlow = NULL,
+                            args, tracking) {
+  # setup
+  ay <- args$ay
+  iy <- args$iy
+  frq <- args$frq
+  man_lag <- args$management_lag
+  cys <- seq(ay + man_lag, ay + man_lag + frq - 1)
+
+  # compute score
+  score <- ind[[1]] # assuming single FLQuant named 'zscore', 'mean_ratio', or 'level'
+
+  # define slope
+  bufflow <- target - width
+  buffupp <- target + width
+  lim <- target - 2 * width
+  slope <- sloperatio / width
+
+  # compute h(score)
+  h <- ifelse(score < lim, 0,
+    ifelse(score < bufflow,
+      slope * (score - lim),
+      ifelse(score > buffupp, 1 + sloperatio * (score - buffupp), 1)
+    )
+  )
+
+  tac_prev <- catch(stk)[, ac(iy - 1)]
+  tac_new <- tac_prev * h
+
+  # apply TAC limits if given
+  if (!is.null(dupp)) tac_new <- pmin(tac_new, tac_prev * dupp)
+  if (!is.null(dlow)) tac_new <- pmax(tac_new, tac_prev * dlow)
+
+  catch(stk)[, ac(cys)] <- tac_new
+  return(list(stk = stk, ind = ind, tracking = tracking))
+}
+
+args <- list(ay = 2025, iy = 2026, frq = 1, data_lag = 1, management_lag = 1)
+idx <- list("cpue" = FLQuant(rlnorm(30), dimnames = list(year = 1996:2025)))
+
+stk <- FLStock(catch = FLQuant(1000, dimnames = list(year = 2025:2030)))
+
+result <- indscore.z(stk, idx, args = args, tracking = FLQuant(0))
+output <- bufferdelta.hcr(result$stk, result$ind, args = args, tracking = result$tracking)
+
+catch(output$stk)
+
+args <- list(ay = 2025, iy = 2026, frq = 1, data_lag = 1, management_lag = 1)
+idx <- list("cpue" = FLQuant(rlnorm(30), dimnames = list(year = 1996:2025)))
+
+result <- indscore.z(stk, idx, args = args, tracking = FLQuant(0))
+output <- bufferdelta.hcr(result$stk, result$ind, args = args, tracking = result$tracking)
+```
+
+## Environment Objects
+
+| Object Name | Type / Purpose |
+|------------------------------------|------------------------------------|
+| `h1` | A list containing the full OM, OEM, and IEM for hypothesis H1 (`qs` file) |
+| `om` | Iterated subset of the Operating Model from `h1` |
+| `oem`, `iem` | Observation and implementation error models; extracted from `h1` |
+| `omperf` | Performance metrics of OM alone, usually `C`, `F`, `SB` for conditioning years |
+| `perf` | Combined data frame of MP simulation performance results |
+| `getSlick` | Function that merges MP/OM results and constructs a `Slick` summary object |
+| `FLslick` | Constructor function that builds and returns a `Slick` object for plotting |
+| `sli` | The returned `Slick` object for visualization (Kobe, Quilt, Spider, etc.) |
+| `ctrl` | A list of control parameters for MPs (e.g., estimation methods, tuning devs) |
+| `condition` | *Not found in current project files; possibly a misidentified object* |
+
+## Helper Functions to Plot Results
+
+```{r}
+#| eval: false
+plot_slick_quilt(sli, stat = "longterm C")
+plot_slick_spider(sli, om_idx = 1, mp_idx = 2)
+plot_slick_tradeoff(sli, stat = "PSBMSY")
+```
+
+## Defining Management Procedures using `mpCtrl` and `mseCtrl`
+
+In the `mse` package, Management Procedures (MPs) are modularly
+constructed using the `mpCtrl` class, which bundles together component
+controls (`mseCtrl`) for estimation, decision-making, and
+implementation.
+
+### Structure of `mpCtrl`
+
+```{r}
+#| label: mpCtrl_structure
+#| echo: false
+#| eval: false
+source("config.R")
+ctrl <- mpCtrl(list(
+  est = mseCtrl(method = shortcut.sa, args = list(
+    metric = "depletion",
+    devs = metdevs,
+    B0 = refpts(om)$SB0
+  )),
+  hcr = mseCtrl(method = buffer.hcr, args = list(
+    target  = 1000,
+    bufflow = 0.30,
+    buffupp = 0.50,
+    lim     = 0.10,
+    min     = 0,
+    metric  = "depletion"
+  )),
+  isys = mseCtrl(method = split.is, args = list(
+    split = catch_props(om)$last5
+  ))
+))
+```
+
+### Components and Options
+
+| Component | Description | Example `method` | Typical `args` |
+|------------------|------------------|------------------|------------------|
+| `est` | Estimator for stock status | `perfect.sa`, `shortcut.sa` | `metric`, `B0`, `devs`, `years` |
+| `hcr` | Harvest Control Rule | `buffer.hcr`, `hockeystick.hcr`, `trend.hcr` | `target`, `lim`, `trigger`, `metric`, `buffer` |
+| `phcr` | Parametrization of HCR (optional) | `parametric.hcr`, etc. | Custom parameters |
+| `isys` | Implementation system (e.g., allocation strategy) | `split.is` | `split = catch_props(...)`, `noise`, `bias` |
+| `tm` | Technical measures (e.g., size limits, gear rules) | -- | Optional, rarely used in CJM MSE setup |
+
+### Summary of `mseCtrl`
+
+An `mseCtrl` object specifies **how a module runs**:
+
+-   `method`: a function to apply (e.g., `shortcut.sa`)
+-   `args`: list of arguments passed to the method
+
+#### Example
+
+```{r}
+#| eval: false
+mseCtrl(
+  method = buffer.hcr,
+  args = list(
+    target  = 1000,
+    bufflow = 0.30,
+    buffupp = 0.50,
+    lim     = 0.10,
+    min     = 0,
+    metric  = "depletion"
+  )
+)
+```
+
+### Accessors and Replacements
+
+You can modify or retrieve components using:
+
+```{r}
+#| eval: false
+method(ctrl@hcr)
+args(ctrl@hcr)$target <- 1200
+```
+
+Or, using provided accessors:
+
+```{r}
+#| eval: false
+hcr(ctrl) <- mseCtrl(method = new.hcr, args = list(...))
+args(ctrl, "hcr")$target <- 1100
+```
+
+This modular framework allows for flexible and transparent testing of
+MPs within the MSE simulation, including full customization of
+estimation, control rules, and implementation behavior. This notebook
+supports the JM MSE development process and is intended for use during
+scenario comparison, workshop reporting, and trade-off evaluation.
+
+## Slick Object Structure
+
+The `Slick` object is the core summary container created by the
+`getSlick()` and `FLslick()` functions. It contains performance data
+used for visualization and evaluation across multiple Management
+Procedures (MPs) and Operating Models (OMs).
+
+| Slot           | Contents                                    |
+|----------------|---------------------------------------------|
+| `@Boxplot`     | MP × OM × performance indicators (boxplots) |
+| `@Kobe`        | SB/SBMSY vs F/FMSY over `kobeyrs`           |
+| `@Quilt`       | Heatmap of average performance              |
+| `@Spider`      | Scaled performance for visual trade-offs    |
+| `@Timeseries`  | Time series of F, C, SB                     |
+| `@Tradeoff`    | Mean trade-off indicators (post-OM years)   |
+| `@MPs`, `@OMs` | Metadata: MP and OM definitions and labels  |
+
+------------------------------------------------------------------------
+
+## Creating and Visualizing a Slick Object
+
+```{r}
+#| eval: false
+# Load OM and compute baseline performance
+h1 <- qread("data/h1_1.07.qs")
+om <- iter(h1$om, seq(100))
+omperf <- performance(om, years = 1970:2023, statistics = statistics[c("C", "F", "SB")])
+
+perf <- readPerformance("demo/performance.dat.gz")
+
+# Combine with MP results (perf), filtering to "tune" runs
+sli <- getSlick(perf[grep("tune", run)], omperf, kobeyrs = 2034:2042)
+```
+
+------------------------------------------------------------------------
+
+## Optional: Shorten MP Labels for Plotting
+
+```{r}
+#| eval: false
+shorten_mp <- function(mpnames) {
+  gsub("h1_1.07_", "", mpnames) |>
+    gsub("cpue2", "C2", .) |>
+    gsub("cpue36", "C36", .) |>
+    gsub("cpue3", "C3", .) |>
+    gsub("scbad", "SCB", .) |>
+    gsub("scgood", "SCG", .) |>
+    gsub("scmedium", "SCM", .) |>
+    gsub("buffer", "BUF", .) |>
+    gsub("hcr_target_", "HCR_T", .) |>
+    gsub("tune", "T", .)
+}
+perf[, mp := paste0("H1_", shorten_mp(mp))]
+```

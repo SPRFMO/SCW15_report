@@ -1,0 +1,12 @@
+---
+title: Appendix A, participants 
+# {#app-participants .unnumbered}
+format: 
+  html:
+    embed-resources: true
+---
+
+
+
+![Participants at the SCW15 technical workshop. From left to right; back row: Iago Mosqueira, Aquiles Sepulveda, Jose Zenteno, Josymar Torrejó; front row: Ricardo Oliveros-Ramos, Grant Adams, Ana Parma, Jim Ianelli, Ignacio Paya.](../images/Group.png){#fig-workshop-group width="80%" fig-align="center"}
+

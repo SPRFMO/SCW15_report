@@ -1,0 +1,73 @@
+---
+title:  Appendix D. Summary comments from external experts 
+format: 
+  html:
+    embed-resources: true
+---
+
+
+
+Dr. Ana Parma, along with Qi Lee reviewed the jmMSE framework and its
+application to evaluating candidate management procedures (CMPs) for
+jack mackerel. Their comments provide both a validation of the current
+approach and targeted suggestions for improvement.
+
+### General Observations on the jmMSE Tool
+
+The jmMSE package offers a comprehensive and flexible platform for
+conducting Management Strategy Evaluation (MSE). It includes:
+
+-   A reference set of Operating Models conditioned to historical data
+    using MCMC.\
+-   A suite of visualization tools and performance metrics for comparing
+    CMPs.\
+-   An efficient tuning algorithm that adjusts user-selected MP
+    parameters to achieve a target outcome, such as a probability of
+    being in the green zone.
+
+A variety of robustness tests were developed to address key
+uncertainties identified for jack mackerel, such as recruitment
+variability, fleet-specific availability, and stock structure
+assumptions (one vs. two stocks). Many of these assumptions relate to
+potential impacts from El Niño-like events. These robustness scenarios
+were refined during the workshop, and their role was clarified as stress
+tests—designed not to predict specific mechanisms, but to evaluate the
+relative performance of CMPs under plausible alternative futures.
+
+### Management Procedures Reviewed
+
+Two primary classes of empirical MPs were evaluated:
+
+1.  **Target-based MPs:** TAC is calculated as a function of a fixed
+    target catch multiplied by an index-driven adjustment factor.\
+2.  **Incremental MPs:** TAC is adjusted from the previous period based
+    on indicator trends, resulting in smoother changes over time.
+
+During tuning (e.g., to achieve P(Green) = 0.6), both approaches
+frequently led to increased TACs and eventual stock declines—especially
+under a high current stock status. This points to the need for
+additional metrics that reflect long-term sustainability, not just
+near-term status probabilities.
+
+### Technical Recommendations
+
+Some actionable recommendations were articulated:
+
+-   **Indicator Visualization:** Add plots showing the time series of
+    indicators used to drive each HCR.\
+-   **Projection-End Metrics:** Include statistics that summarize stock
+    status and trends at the end of the projection period. This could
+    include P(Green) in the final year or a new trend-based metric.\
+-   **Weight-at-Age Specification:** Enable projections to use mean
+    weights-at-age over a recent period (as done for selectivity),
+    rather than fixing weights from the start year.\
+-   **Consistency of Reference Points:** Ensure that FMSY and SSBMSY
+    reference points used for performance metrics are consistent with
+    the selectivity, weights-at-age, and fleet composition used in
+    projections. This is critical since MPs are tuned relative to these
+    reference points.\
+-   **Observation Error Realism:** Consider adding robustness scenarios
+    with variable selectivity and weight-at-age during projections to
+    better represent realistic observation error in indices—particularly
+    for commercial CPUE.
+

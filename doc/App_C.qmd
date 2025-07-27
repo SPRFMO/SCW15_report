@@ -1,0 +1,411 @@
+---
+title:  Appendix C, minutes 
+format: 
+  html:
+    embed-resources: true
+# {#app-minutes .unnumbered}
+---
+
+## Day 1 summary {.unnumbered}
+
+### Participants and Setup
+
+-   The workshop included both in-person and online participation, with
+    representatives from Peru, Chile, Argentina, Ecuador, and the
+    Netherlands, among others.
+
+-   The agenda was described as ambitious, with a focus on hands-on
+    technical work, including software installation and repository
+    access.
+
+### Technical Infrastructure & Workflow
+
+-   Two main GitHub repositories are central: FLjjm (for building FLR
+    objects and running JJM inside the MP) and jjmMSE (the main
+    development site for the MSE work).
+
+-   The workflow follows the DAF (Data, Analysis, Framework) system,
+    with clear steps for data preparation, OEM (Operating Model)
+    conditioning, and performance analysis.
+
+-   Emphasis was placed on forking repositories and using branches for
+    collaborative work, with a preference for merging at the end of the
+    week.
+
+-   Docker was suggested as a potential solution for ensuring consistent
+    environments across operating systems and participants, though not
+    yet implemented.
+
+### Modeling and Simulation
+
+-   The group is working with both single-stock and two-stock
+    hypotheses, including a two-stock model with future-applied
+    connectivity based on movement matrices.
+
+-   Robustness scenarios are being explored, including cyclic
+    environmental changes and their impacts on productivity.
+
+-   The group discussed the use of ".q" files for efficient storage and
+    handling of large simulation outputs.
+
+### Key Scientific Discussions
+
+-   The calculation and interpretation of MSY (Maximum Sustainable
+    Yield) and *F~MSY~* were debated, with concerns about the realism of
+    current methods in JJM.
+
+-   It was agreed that the 10-year average of MSY reference points would
+    be used for performance evaluation, to avoid short-term volatility.
+
+-   Selectivity patterns and their impact on projections were a major
+    topic. The group considered transitioning from terminal year
+    selectivity to long-term averages over a five-year period to avoid
+    unrealistic jumps in catch projections.
+
+-   There was consensus that the main focus should be on long-term
+    performance of management procedures, but short- and mid-term
+    results are also important for managers.
+
+### Environmental and Biological Scenarios
+
+-   The workshop addressed the need to model environmental variability,
+    particularly El Niño events, and their impact on stock productivity,
+    weight-at-age, and selectivity.
+
+-   Literature-informed scenarios were presented, with parameters for
+    changes in mortality, recruitment, and spatial distribution.
+
+-   Regional differences (e.g., between far north and south stocks) and
+    their implications for catchability and biological responses were
+    discussed.
+
+### Action Items and Next Steps
+
+-   Participants will review and potentially refine the environmental
+    scenarios, with a focus on realism and literature support.
+
+-   Further work is planned on selectivity transitions and the technical
+    implementation of gradual changes.
+
+-   The group will continue to test and validate the workflow, with an
+    emphasis on reproducibility and collaborative code development.
+
+## Day 2 {.unnumbered}
+
+### Opening
+
+-   The workshop began with participant introductions, including new
+    attendees such as Robert Robinson.
+
+-   Jim Ianelli welcomed participants, provided a recap of the previous
+    day, and referenced a summary posted in the Teams channel for
+    review.
+
+### Review of Previous Work and Agenda
+
+-   The agenda was described as ambitious, with a focus on technical
+    aspects of Management Strategy Evaluation (MSE).
+
+-   Discussion included the effects of El Niño on recruitment and catch
+    distribution, referencing an unsent summary email and a report on
+    the topic.
+
+### Technical Discussions
+
+#### a. Effects of El Niño and Distribution Shifts
+
+-   Jim presented an analysis of catch distribution changes between
+    coastal and offshore fleets, proposing a 15% average offshore drop
+    (60% decline in Q for offshore fleet) and an 11% increase for
+    coastal zones.
+
+-   Participants debated the appropriateness of using long-term versus
+    short-term averages and the need for smoothing changes rather than
+    step changes.
+
+-   It was agreed that the effect should be applied to both availability
+    and catchability in simulations, with implications for the acoustic
+    survey indices.
+
+#### b. Selectivity and Projection Periods
+
+-   The group discussed the transition from recent selectivity estimates
+    to long-term means, with concerns about artifacts from using 10-year
+    averages.
+
+-   Consensus moved toward using a representative period (2000--2010)
+    for selectivity, avoiding recent years with anomalously high
+    selection for older fish.
+
+-   The need for a smooth transition in selectivity assumptions for
+    projections was emphasized.
+
+#### c. Recruitment Regimes and Projections
+
+-   Analysis of recruitment means for projections considered the El Niño
+    effect, with a proposed 23--30% bump up in recruitment for recent
+    years.
+
+-   Debate ensued on which years to include for calculating means, with
+    a focus on data consistency from 1991 onward.
+
+-   The group discussed the potential for regime shifts and the
+    implications for robustness testing in MSE.
+
+#### d. Model Implementation and Coding Practices
+
+-   Demonstrations were given on the use of R and package structures for
+    running MSE simulations, including best practices for project setup
+    and function sourcing.
+
+-   The importance of consistent selectivity and Q parameter
+    normalization across projections and indices was highlighted.
+
+### Decisions and Action Items
+
+-   Adopt 2000--2010 as the reference period for selectivity in
+    projections, with a smooth transition from current conditions.
+
+-   Apply a 23--30% recruitment increase for projections reflecting
+    recent El Niño effects, with final years to be confirmed.
+
+-   Ensure normalization of selectivity and Q parameters is consistent
+    across all indices and projections.
+
+-   Continue refining the codebase, documenting changes, and sharing
+    updates among the technical team.
+
+### Other Business and Closing
+
+-   Participants shared experiences with data handling, model setup, and
+    coding challenges.
+
+-   The workshop included informal discussions and technical
+    clarifications.
+
+-   The session concluded with plans to continue reviewing model outputs
+    and performance indicators, and to reconvene as needed for further
+    technical work.
+
+## Day 3 {.unnumbered}
+
+### Review of Technical Issues and Model Adjustments
+
+-   Discussion focused on the technical aspects of Management Strategy
+    Evaluation (MSE) for jack mackerel.
+
+-   Participants examined the function and configuration of sliding
+    buffers, control rules, and the impact of selectivity changes.
+
+-   The group reviewed how indices (e.g., CPUE, acoustics) are
+    incorporated, including the use of averages over multiple years and
+    weighting schemes for recent data.
+
+-   There was debate on the variance and correlation structure in
+    observation models, and how these affect simulation results.
+
+### Timing and Implementation of Management Procedures (MPs)
+
+-   The workflow and timing for implementing MPs were clarified:
+
+    -   Data from 2026 would be used for advice in 2027.
+
+    -   The Scientific Committee (SC) would run the MP, with the
+        Commission making final decisions.
+
+    -   Discussion on the need for preliminary versus finalized data and
+        the implications for observation error.
+
+-   The importance of using the most recent data versus the stability of
+    multi-year averages was highlighted.
+
+### Treatment of Effort Creep and Index Standardization
+
+-   Participants agreed that simulating effort creep in future
+    projections is not necessary for the base case, but could be a
+    robustness test.
+
+-   The importance of correcting historical indices for effort creep was
+    emphasized, while future indices are assumed to be unbiased.
+
+-   There was consensus that the standardized or corrected index should
+    be used for both simulation and real-world application.
+
+### Selection and Tuning of Management Procedures
+
+-   Multiple MPs were tested, each tuned to a 60% probability of meeting
+    the Kobe green zone.
+
+-   The group compared different buffer widths and TAC change limits,
+    analyzing their effects on catch variability and performance
+    metrics.
+
+-   Discussion included the need for clear documentation of
+    specifications and the importance of presenting a set of MPs with
+    distinct trade-offs to the Commission, rather than recommending a
+    single option.
+
+### Performance Metrics and Projections
+
+-   The team reviewed performance across near-term, medium-term, and
+    long-term projections.
+
+-   Boxplots and other visualizations were used to compare MPs, focusing
+    on catch variability, probability of stock being in the green zone,
+    and interannual TAC changes.
+
+-   Concerns were raised about downward trends in some simulations and
+    the need for additional performance statistics (e.g., probability of
+    stock crash).
+
+### Next Steps and Action Items
+
+-   Agreement to refine the OM projections and finalize Annex
+    documentation on selectivity and other specifications.
+
+-   Plan to continue testing and tuning MPs, with further analysis of
+    performance metrics.
+
+-   The SC will present a set of MPs to the Commission, along with the
+    status quo as a fallback.
+
+-   Lunch arrangements and informal discussions concluded the session.
+
+## Day 4 {.unnumbered}
+
+### Key Activities and Discussions
+
+-   Model Runs and Debugging:
+
+    -   Overnight and morning runs were conducted to examine the
+        acoustics index using legacy targets and buffers.
+
+    -   A significant focus was on debugging the generation of CPUE v3
+        for 2024 and 2025, investigating unexpected jumps in predicted
+        values.
+
+    -   Alternative normalization methods for CPUE were tested,
+        following recommendations to improve stability.
+
+-   Analysis of Index Jumps:
+
+    -   The team identified that the jump in the index from 2024 to 2025
+        was primarily driven by increases in vulnerable biomass and
+        changes in mean weight at age, rather than selectivity changes
+        alone.
+
+    -   Weighted age calculations and their implications for projections
+        were reviewed in detail, including the use of three-year means
+        and the impact of preliminary data from 2024.
+
+-   Code Review and Live Demonstration:
+
+    -   Live coding sessions were held to demonstrate how to adjust the
+        OM to exclude problematic years (e.g.,
+        dropping 2024 and extending from 2023).
+
+    -   Smoothing techniques for selectivity and weights at age were
+        discussed and implemented to reduce artificial jumps in
+        projections.
+
+-   Uncertainty and Robustness:
+
+    -   The group discussed the treatment of process error, residual
+        variability, and autocorrelation in indices.
+
+    -   Empirical approaches to setting CVs for indices were compared
+        with default values, and the impact on future projections was
+        considered.
+
+-   Action Items and Next Steps:
+
+    -   Further testing of the OM with adjusted years and smoothing is
+        to be completed, with outputs to be pushed under new filenames
+        to avoid disrupting ongoing work.
+
+    -   Continued analysis of the causes of high catches in test runs
+        and further parameter tuning were assigned.
+
+    -   The group agreed to revisit and possibly refine the approach to
+        handling preliminary data and smoothing in both indices and
+        weights at age.
+
+### Notable Outcomes
+
+-   Consensus that both selectivity and mean weight at age contribute to
+    observed index jumps, with smoothing and exclusion of problematic
+    years being viable mitigation strategies.
+
+-   Agreement to document and communicate technical progress to the
+    broader group, while maintaining a focus on robust, transparent
+    modeling practices.
+
+## Day 5 {.unnumbered}
+
+### Model Runs and Technical Issues
+
+-   The group reviewed progress on running various management procedures
+    (MPs), focusing on the acoustic and CPUE indices. Issues with FL
+    libraries and model reproducibility were discussed, with fixes
+    applied to ensure models ran as expected.
+
+-   Robustness tests were conducted, particularly comparing the
+    performance of different indices (acoustic, CPUE3, CPUE6, 3.6). The
+    need to clarify how "shortcut" procedures treat stocks was debated,
+    especially regarding biomass tracking and catch splits.
+
+-   The group noted that tuning parameters (e.g., width, slope ratio)
+    and their impact on model performance remain a challenge, especially
+    when standardizing across indices.
+
+### Interpretation and Presentation of Results
+
+-   There was significant discussion about interpreting outputs,
+    particularly when catch trends did not align with biomass trends.
+    Concerns were raised about the credibility of certain indices and
+    the need for clearer communication of model behavior.
+
+-   The importance of visualizing trade-offs and the response of TAC to
+    indices was emphasized, with ongoing efforts to develop summary
+    figures for inclusion in reports.
+
+### Workflows, Code, and Collaboration
+
+-   Participants shared experiences with the codebase, noting progress
+    in understanding and modifying functions, but also highlighting the
+    need for further documentation and standardization.
+
+-   The group agreed on the value of reproducibility and transparency,
+    with suggestions to document daily progress and maintain clear
+    records for future reference.
+
+### Planning and Next Steps
+
+-   The group recognized that while technical progress was made, the
+    process is ongoing. There was consensus on the need for another
+    technical workshop (ideally in person) to continue development and
+    evaluation of MPs.
+
+-   The timeline for delivering a report to the Scientific Committee
+    (SC) and Commission was discussed, with acknowledgment that final
+    recommendations are not yet possible. Instead, the report will focus
+    on documenting progress, challenges, and a proposed work plan for
+    the coming year.
+
+-   Concerns about funding, continuity (especially regarding software
+    and contracts), and the need for member commitment to ongoing tool
+    development were raised.
+
+### Recommendations and Reflections
+
+-   The group agreed to recommend continued development and evaluation
+    of MPs, with an emphasis on transparency, reproducibility, and clear
+    communication to managers.
+
+-   It was noted that, if a new MP is not ready for 2026, the existing
+    method (Annex K) will remain in use.
+
+-   There was broad recognition of the complexity and time required for
+    this process, and appreciation for the collaborative progress made
+    during the workshop.
+
