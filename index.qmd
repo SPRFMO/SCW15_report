@@ -32,7 +32,7 @@ reviewers to review recent progress and refine the MSE framework being
 developed under SPRFMO. The primary goal of the workshop was to ensure
 that the modeling framework and management procedures (MPs) are
 scientifically sound, technically transparent, and aligned with
-management priorities.
+management priorities as outlined by the Commission (e.g., @sprfmo2025jmwgmse)
 
 ### Key Outcomes and Advancements
 

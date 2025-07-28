@@ -30,11 +30,11 @@ extract_tracking_array <- function(fl_mse_obj, metrics = NULL) {
 }
 
 # Example usage for all metrics:
-df_all <- extract_tracking_array(bufflows[[1]])
-summary(df_all)
-# Example usage:
-df <- extract_tracking_array(run)
-names(df_all)
-df_all |> dplyr::filter(SB.om<1e5) |> ggplot(aes(x=(SB.om),y=(tac.hcr))) + geom_point(size=.8,alpha=.3) +
-  ggthemes::theme_few()
-summary(tracking(run))
+# df_all <- extract_tracking_array(bufflows[[1]])
+# summary(df_all)
+# # Example usage:
+# df <- extract_tracking_array(run)
+# names(df_all)
+# df_all |> dplyr::filter(SB.om<1e5) |> ggplot(aes(x=(SB.om),y=(tac.hcr))) + geom_point(size=.8,alpha=.3) +
+#   ggthemes::theme_few()
+# summary(tracking(run))

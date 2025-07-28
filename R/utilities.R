@@ -103,22 +103,6 @@ catch_props <- function(x) {
 }
 # }}}
 
-# plotSummary {{{
-
-plotSummary <- function(om, runs) {
-  (plot(window(om, start = 2010), runs) + guides(colour = FALSE)) +
-    kobeMPs(performance(runs)) +
-    (plotBPs(performance(runs)[year == "short"],
-      statistics = c("green", "SBMSY", "C", "IACC")
-    ) + guides(fill = FALSE) +
-      ggtitle("2024-2028")) +
-    (plotBPs(performance(runs)[year == "long"],
-      statistics = c("green", "SBMSY", "C", "IACC")
-    ) + guides(fill = FALSE) +
-      ggtitle("2034-2042")) +
-    plot_layout(design = "AAA\nBCD", guides = "collect")
-}
-# }}}
 
 # cjm.iem {{{
 cjm.iem <- function(ctrl, args, tracking, F3prop, correction = NULL) {
@@ -160,7 +144,6 @@ cjm.iem <- function(ctrl, args, tracking, F3prop, correction = NULL) {
 #'
 #' @examples
 getSlick <- function(x, y, kobeyrs = unique(x$year)) {
-
   # GET dims
   mps <- unique(x$mp)
   oms <- unique(x$om)
@@ -198,7 +181,7 @@ getSlick <- function(x, y, kobeyrs = unique(x$year)) {
   sli <- FLslick(tab, kobey = as.numeric(kobeyrs))
 
   # SET current year, end of OM
-  sli@Timeseries@TimeNow <- as.numeric(minyr) #as.numeric(y[, max(year)])
+  sli@Timeseries@TimeNow <- as.numeric(minyr) # as.numeric(y[, max(year)])
 
   # CHANGES to Slick
 
@@ -227,7 +210,6 @@ getSlick <- function(x, y, kobeyrs = unique(x$year)) {
 
 
 FLslick <- function(df, kobey = NULL) {
-
   df <- as.data.frame(df)
 
   # Basic checks ------------------------------------------------------------
@@ -553,7 +535,8 @@ FLslick <- function(df, kobey = NULL) {
 
 # OLD bank_borrow.is {{{
 
-OLDbank_borrow.is <- function(stk, ctrl, args, split, bank = NULL, borrow = NULL,
+OLDbank_borrow.is <- function(
+    stk, ctrl, args, split, bank = NULL, borrow = NULL,
     tracking) {
   # DIMS
   ay <- args$ay
@@ -618,14 +601,16 @@ OLDbank_borrow.is <- function(stk, ctrl, args, split, bank = NULL, borrow = NULL
 
 # bank_borrow.is {{{
 
-bank_borrow.is <- function(stk, ctrl, args, split, rate = NULL, diff = 0.15,
+bank_borrow.is <- function(
+    stk, ctrl, args, split, rate = NULL, diff = 0.15,
     tracking) {
   # DIMS
   spread(args)
 
   # STOP if frq > 1
-  if(frq > 1)
+  if (frq > 1) {
     stop("Banking & borrowing currently assumes annual management (frq=1)")
+  }
 
   # projection years
   pys <- ac(seq(ay + management_lag, ay + management_lag + frq - 1))
@@ -638,12 +623,12 @@ bank_borrow.is <- function(stk, ctrl, args, split, rate = NULL, diff = 0.15,
   # CORRECT for previous borrowing or banking
   if (ay == iy) {
     pre <- c(areaSums(unitSums(seasonSums(window(catch(stk),
-      start = ay - management_lag, end = ay - management_lag)))))
+      start = ay - management_lag, end = ay - management_lag
+    )))))
 
     # START tracking
     track(tracking, "borrowing.isys", ac(ay)) <- 0
     track(tracking, "banking.isys", ac(ay)) <- 0
-  
   } else {
     pre <- c(tracking[[1]]["hcr", ac(ay)])
 
@@ -662,7 +647,7 @@ bank_borrow.is <- function(stk, ctrl, args, split, rate = NULL, diff = 0.15,
 
   # IF higher TAC, THEN bank
   banking <- ifelse(tac > pre * (1 + diff), tac * rate, 0)
-  
+
   # TRACK amount being banked into pys
   track(tracking, "banking.isys", pys) <- banking
 
@@ -924,29 +909,6 @@ meta.hcr <- function(
 }
 # }}}
 
-# plot_omperf  {{{
-plot_omperf <- function(dt, select = c("mean(C)"), probs = c(0.1, 0.25, 0.5, 0.75, 0.9)) {
-  dt[, year := as.integer(year)]
-  dt[, iter := as.integer(iter)]
-  dt[, data := as.numeric(data)]
-
-  dt_subset <- dt[name %in% select]
-  summary_dt <- dt_subset[, as.list(quantile(data, probs = probs, na.rm = TRUE)), by = .(year, name)]
-
-  setnames(summary_dt, old = paste0(100 * probs, "%"), new = paste0("q", 100 * probs))
-
-  ggplot(summary_dt, aes(x = year)) +
-    geom_ribbon(aes(ymin = q10, ymax = q90, fill = name), alpha = 0.2) +
-    geom_ribbon(aes(ymin = q25, ymax = q75, fill = name), alpha = 0.4) +
-    geom_line(aes(y = q50, color = name), linewidth = 1) +
-    labs(y = select, title = "Operating Model") +
-    scale_fill_discrete(name = NULL) +
-    scale_color_discrete(name = NULL) +
-    theme_minimal() +
-    theme(legend.position = "bottom")
-}
-
-# }}}
 
 # get_tuned_mps  {{{
 get_tuned_mps <- function(dt, pattern = "tune", select_name = "mean(C)", buffer_filter = c("cpue3", "cpue36", "cpue367")) {
@@ -985,233 +947,6 @@ get_tuned_mps <- function(dt, pattern = "tune", select_name = "mean(C)", buffer_
 }
 # }}}
 
-# plot_mp_panels  {{{
-plot_mp_panels <- function(dt, metric_label = "mean(C)",
-                           probs = c(0.1, 0.25, 0.5, 0.75, 0.9),
-                           ncols = NULL) {
-  summary_dt <- dt[, as.list(quantile(data, probs = probs, na.rm = TRUE)),
-    by = .(year, tune_level, buffer_type)
-  ]
-
-  setnames(summary_dt, old = paste0(100 * probs, "%"), new = paste0("q", 100 * probs))
-
-  p <- ggplot(summary_dt, aes(x = year)) +
-    geom_ribbon(aes(ymin = q10, ymax = q90), fill = "salmon", alpha = 0.2) +
-    geom_ribbon(aes(ymin = q25, ymax = q75), fill = "salmon", alpha = 0.4) +
-    geom_line(aes(y = q50), color = "black", linewidth = 0.8) +
-    geom_vline(xintercept = 2034, linetype = "dashed", color = "darkgrey", linewidth = 0.8) +
-    geom_vline(xintercept = 2042, linetype = "dashed", color = "darkgrey", linewidth = 0.8) +
-    labs(title = "Management Procedures", y = metric_label, x = "Year") +
-    theme_minimal()
-
-  # Facet with 1 or more columns depending on user input
-  if (is.null(ncols)) {
-    p <- p + facet_grid(rows = vars(tune_level), cols = vars(buffer_type))
-  } else {
-    p <- p + facet_grid(rows = vars(tune_level), cols = vars(buffer_type), labeller = "label_value") +
-      theme(strip.text = element_text(size = 10))
-  }
-
-  return(p)
-} # }}}
-
-library(patchwork)
-
-# plotOMrunsDT  {{{
-plotOMrunsDT <- function(om_dt, mp_dt,
-                         select = "mean(C)",
-                         y_label = "Catch",
-                         y_labelmp = "Mean Catch",
-                         buffer_filter = c("cpue3", "cpue36", "cpue367"),
-                         ncols = NULL) {
-  # OM plot
-  p_om <- plot_omperf(om_dt, select = select) + labs(y = y_label)
-
-  # MP plot
-  mp_filtered <- get_tuned_mps(mp_dt, select_name = select, buffer_filter = buffer_filter)
-  p_mp <- plot_mp_panels(mp_filtered, metric_label = y_labelmp, ncols = ncols)
-
-  # Combine
-  combined <- p_om / p_mp + plot_layout(heights = c(1, 2))
-  return(combined)
-} # }}}
-
-## Plotting profiles
-
-# get_profile  {{{
-get_profile <- function(dt, pattern = "hcr_target") {
-  dt[, year := as.integer(year)]
-  dt[, iter := as.integer(iter)]
-  dt[, data := as.numeric(data)]
-
-  # Filter MPs that match the pattern (e.g. hcr_target_XXX)
-  prof_dt <- dt[grepl(pattern, mp)]
-
-  # Extract target number from mp name
-  prof_dt[, target := as.integer(sub(".*_target_", "", mp))]
-
-  return(prof_dt)
-}
-
-get_profile <- function(dt, group_pattern = "cpue3_buffer", target_pattern = "target_") {
-  dt[, year := as.integer(year)]
-  dt[, iter := as.integer(iter)]
-  dt[, data := as.numeric(data)]
-
-  # Filter to relevant MP group (e.g., cpue3_buffer, scgood_buffer, etc.)
-  prof_dt <- dt[grepl(group_pattern, mp) & grepl(target_pattern, mp)]
-
-  # Extract target number using regex
-  prof_dt[, target := as.integer(sub(".*_target_", "", mp))]
-
-  # Extract MP group (e.g., cpue3_buffer, scgood_buffer, etc.)
-  prof_dt[, mp_group := sub(".*_([a-z0-9]+_buffer)_.*", "\\1", mp)]
-
-  return(prof_dt)
-}
-
-# }}}
-
-# plot_profile_metric  {{{
-plot_profile_metric <- function(metric_name = "P(Green)", y_label = "green") {
-  ggplot(profile_summary[name == metric_name], aes(x = target, y = value)) +
-    geom_line(color = "steelblue", linewidth = 1) +
-    geom_point(color = "darkblue", size = 2) +
-    labs(x = "CPUE Target", y = y_label, title = paste0(y_label, " vs CPUE Target")) +
-    theme_minimal()
-}
-# }}}
-
-# plot_profile_set {{{
-
-plot_profile_set <- function(profile_dt, title, outpath = NULL, width = 3000) {
-  # Summarize
-  summary_dt <- profile_dt[, .(value = mean(data, na.rm = TRUE)), by = .(target, name)]
-
-  # Set max limits
-  ymaxs <- summary_dt[name %in% c("P(Green)", "P(SB>SB[limit])", "IAC(C)"),
-    .(max_val = max(value, na.rm = TRUE)),
-    by = name
-  ]
-
-  # Apply your colleague’s scaling rule
-  ymaxs[, ylim := ifelse(name == "IAC(C)",
-    ceiling(max_val / 10) * 2 * 10,
-    1
-  )]
-
-  # Join limits to summary
-  limits <- setNames(ymaxs$ylim, ymaxs$name)
-
-  # Internal plotting function with y-axis limits
-  plot_profile_metric_scaled <- function(metric_name, y_label) {
-    ggplot(summary_dt[name == metric_name], aes(x = target, y = value)) +
-      geom_line(color = "steelblue", linewidth = 1) +
-      geom_point(color = "darkblue", size = 2) +
-      labs(x = "CPUE Target", y = y_label, title = NULL) +
-      ylim(0, limits[[metric_name]]) +
-      theme_minimal()
-  }
-
-  # Create three panels
-  a <- plot_profile_metric_scaled("P(Green)", "P(Kobe = Green)")
-  b <- plot_profile_metric_scaled("P(SB>SB[limit])", "P(SB > SB[limit])")
-  c <- plot_profile_metric_scaled("IAC(C)", "Inter-Annual Catch Variability")
-
-  p_combined <- a | b | c +
-    plot_layout(nrow = 1) +
-    plot_annotation(title = title)
-
-  # Save or return
-  if (!is.null(outpath)) {
-    pubpng(outpath, p_combined, width = width)
-  } else {
-    return(p_combined)
-  }
-}
-
-## Plot TAC limits TS
-# }}}
-
-# plot_selected_metrics_stack  {{{
-
-
-plot_selected_metrics_stack <- function(dt,
-                                        mp_list,
-                                        metric_names = c("mean(C)", "SB", "F"),
-                                        y_labels = c("Catch (tonnes)", "SSB (tonnes)", "F"),
-                                        titles = c("Catches", "Spawning Biomass", "Fishing Mortality"),
-                                        probs = c(0.1, 0.25, 0.5, 0.75, 0.9)) {
-  dt[, year := as.integer(year)]
-  dt[, iter := as.integer(iter)]
-  dt[, data := as.numeric(data)]
-
-  # Assign MP labels
-  dt <- dt[mp %in% mp_list & name %in% metric_names]
-  dt[, mp_label := factor(mp, levels = mp_list)]
-
-  # Helper: one panel per metric
-  plot_metric <- function(metric, y_label, title) {
-    dsub <- dt[name == metric]
-    summary_dt <- dsub[, as.list(quantile(data, probs = probs, na.rm = TRUE)), by = .(year, mp_label)]
-    qnames <- paste0("q", 100 * probs)
-    setnames(summary_dt, old = paste0(100 * probs, "%"), new = qnames)
-
-    ggplot(summary_dt, aes(x = year, fill = mp_label, color = mp_label)) +
-      geom_ribbon(aes(ymin = get(qnames[1]), ymax = get(qnames[5])), alpha = 0.1, color = NA) +
-      geom_ribbon(aes(ymin = get(qnames[2]), ymax = get(qnames[4])), alpha = 0.3, color = NA) +
-      geom_line(aes(y = get(qnames[3])), linewidth = 0.5, alpha = 0.75) +
-      geom_vline(xintercept = 2034, linetype = "dashed", color = "darkgrey") +
-      geom_vline(xintercept = 2042, linetype = "dashed", color = "darkgrey") +
-      labs(title = title, y = y_label, x = "Year", color = "MP", fill = "MP") +
-      theme_minimal()
-  }
-
-  # Build the three panels
-  plots <- Map(plot_metric, metric_names, y_labels, titles)
-  wrap_plots(plots, ncol = 1, guides = "collect") & theme(legend.position = "right")
-}
-
-# }}}
-
-# plot_profile_targets_stack  {{{
-
-plot_profile_targets_stack <- function(dt,
-                                       metric_names = c("mean(C)", "SB", "F"),
-                                       y_labels = c("Catch (tonnes)", "SSB", "F"),
-                                       titles = c("Catches", "Spawning Biomass", "Fishing Mortality"),
-                                       probs = c(0.1, 0.25, 0.5, 0.75, 0.9)) {
-  # Prepare
-  dt[, year := as.integer(year)]
-  dt[, iter := as.integer(iter)]
-  dt[, data := as.numeric(data)]
-
-  dt <- dt[name %in% metric_names]
-  dt[, target_label := factor(target, levels = sort(unique(target)))]
-
-  # One panel per metric
-  plot_metric <- function(metric, y_label, title) {
-    dsub <- dt[name == metric]
-    summary_dt <- dsub[, as.list(quantile(data, probs = probs, na.rm = TRUE)), by = .(year, target_label)]
-    qnames <- paste0("q", 100 * probs)
-    setnames(summary_dt, old = paste0(100 * probs, "%"), new = qnames)
-
-    ggplot(summary_dt, aes(x = year, fill = target_label, color = target_label)) +
-      geom_ribbon(aes(ymin = get(qnames[1]), ymax = get(qnames[5])), alpha = 0.1, color = NA) +
-      geom_ribbon(aes(ymin = get(qnames[2]), ymax = get(qnames[4])), alpha = 0.3, color = NA) +
-      geom_line(aes(y = get(qnames[3])), linewidth = 0.7, alpha = 0.8) +
-      geom_vline(xintercept = 2034, linetype = "dashed", color = "darkgrey") +
-      geom_vline(xintercept = 2042, linetype = "dashed", color = "darkgrey") +
-      labs(title = title, y = y_label, x = "Year", color = "Target", fill = "Target") +
-      theme_minimal()
-  }
-
-  # Combine
-  plots <- Map(plot_metric, metric_names, y_labels, titles)
-  wrap_plots(plots, ncol = 1, guides = "collect") & theme(legend.position = "right")
-}
-
-# }}}
 
 # cpuescore.ind {{{
 # Calculated over mean and sd on refyrs
@@ -1301,71 +1036,26 @@ cpuescores.ind <- function(
 
 zscore <- function(x) (x %-% yearMeans(x)) %/% sqrt(yearVars(x))
 
-# plot_C_SSB_F_stack  {{{
+cpuescorejim.ind <- function(stk, idx, index = 1, mean, sd, args, tracking) {
+  # ARGS
+  ay <- args$ay
+  dlag <- args$data_lag
+  dy <- ay - dlag
+  # TODO: CHECK for frq>1
 
-plot_C_SSB_F_stack <- function(dt,
-                               om_dt = NULL,
-                               metric_names = c("mean(C)", "SB", "F"),
-                               y_labels = c("Catch (t)", "SSB (t)", "F"),
-                               titles = c("Catches", "Spawning Biomass", "Fishing Mortality"),
-                               probs = c(0.1, 0.25, 0.5, 0.75, 0.9)) {
-  # Ensure correct formats
-  dt[, year := as.integer(year)]
-  dt[, iter := as.integer(iter)]
-  dt[, data := as.numeric(data)]
-  dt <- dt[name %in% metric_names]
-  dt[, mp_label := factor(mp, levels = unique(mp))]
+  # GET metric until dy
+  met <- biomass(idx[[index]])[, ac(dy)]
 
-  # Handle OM data
-  if (!is.null(om_dt)) {
-    om_dt[, year := as.integer(year)]
-    om_dt[, iter := as.integer(iter)]
-    om_dt[, data := as.numeric(data)]
-    om_dt <- om_dt[name %in% metric_names]
-    om_dt[, mp_label := "OM"]
+  ind <- FLQuants(zscore = (met[, ac(dy)] %-% mean) %/% sd)
+  ind$zscore <- ifelse(  ind$zscore > 3, 3, 
+                         ifelse(  ind$zscore < -3, -3, ind$zscore))
 
-    # Check for continuity and fill year gap if needed
-    last_om_year <- max(om_dt$year)
-    first_mp_year <- min(dt$year)
-    if (last_om_year + 1 < first_mp_year) {
-      message("⚠️ Gap between OM and MP years: ", last_om_year, " -> ", first_mp_year)
-    }
+  track(tracking, "cpue.ind", ac(ay)) <- ind$zscore
 
-    dt <- rbind(om_dt, dt, fill = TRUE)
-  }
-
-  # Internal function for plotting each metric
-  plot_metric <- function(metric, y_label, title) {
-    dsub <- dt[name == metric]
-    summary_dt <- dsub[, as.list(quantile(data, probs = probs, na.rm = TRUE)), by = .(year, mp_label)]
-    qnames <- paste0("q", 100 * probs)
-    setnames(summary_dt, old = paste0(100 * probs, "%"), new = qnames)
-
-    p <- ggplot(summary_dt, aes(x = year, fill = mp_label, color = mp_label)) +
-      geom_ribbon(aes(ymin = get(qnames[1]), ymax = get(qnames[5])), alpha = 0.1, color = NA) +
-      geom_ribbon(aes(ymin = get(qnames[2]), ymax = get(qnames[4])), alpha = 0.3, color = NA) +
-      geom_line(aes(y = get(qnames[3])), linewidth = 0.7, alpha = 0.8) +
-      geom_vline(xintercept = 2034, linetype = "dashed", color = "darkgrey") +
-      geom_vline(xintercept = 2042, linetype = "dashed", color = "darkgrey") +
-      labs(title = title, y = y_label, x = "Year", color = "Scenario", fill = "Scenario") +
-      theme_minimal()
-
-    # For F panel: expand y-limit to accommodate OM peak
-    if (metric == "F") {
-      ymax <- max(summary_dt$q90, na.rm = TRUE)
-      buffer <- 0.05 * ymax
-      p <- p + coord_cartesian(ylim = c(0, ymax + buffer))
-    }
-
-    return(p)
-  }
-
-  # Combine all metric plots
-  plots <- Map(plot_metric, metric_names, y_labels, titles)
-  wrap_plots(plots, ncol = 1, guides = "collect") & theme(legend.position = "right")
+  return(list(stk = stk, ind = ind, tracking = tracking, cpue = met))
 }
-
 # }}}
+
 
 # periodsPerformance {{{
 
@@ -1401,68 +1091,30 @@ periodsPerformance <- function(x, periods) {
 
 # labelPerformance {{{
 
-labelPerformance <- function(dat, labels=NULL) {
-
+labelPerformance <- function(dat, labels = NULL) {
   # NO label, use mp
-  if(is.null(labels)) {
+  if (is.null(labels)) {
     dat[, label := mp]
     return(dat[])
-  # 'numeric', set as sequence in sort order
-  } else if(identical(labels, "numeric")) {
-    labels <- data.table(mp=sort(unique(dat$mp)), label=seq(unique(dat$mp)))
-  # VECTOR, assign names by sort(unique)
-  } else if(is.vector(labels)) {
-    labels <- data.table(mp=sort(unique(dat$mp)), label=labels)
-  # SET as data.table JIC
+    # 'numeric', set as sequence in sort order
+  } else if (identical(labels, "numeric")) {
+    labels <- data.table(mp = sort(unique(dat$mp)), label = seq(unique(dat$mp)))
+    # VECTOR, assign names by sort(unique)
+  } else if (is.vector(labels)) {
+    labels <- data.table(mp = sort(unique(dat$mp)), label = labels)
+    # SET as data.table JIC
   } else {
     labels <- data.table(labels)
   }
 
   # CHECK dims
-  if(!all(unique(dat[, mp]) %in% unique(labels[, mp])))
+  if (!all(unique(dat[, mp]) %in% unique(labels[, mp]))) {
     stop("'mp' names in both tables do not match")
+  }
 
   # MERGE by mp
-  dat <- merge(dat[, !"label"], labels[, .(mp, label)], by="mp")
+  dat <- merge(dat[, !"label"], labels[, .(mp, label)], by = "mp")
 
   return(dat[])
 }
-
-
-metric_idx <- which(dn$metric %in% metrics)
-year_vals <- as.integer(dn$year)
-iter_vals <- as.integer(dn$iter)
-
-if (length(metric_idx) == 0) stop("None of the requested metrics are present.")
-
-# Create long-form list of data.frames
-out <- lapply(metric_idx, function(i) {
-  mname <- dn$metric[i]
-  slice <- arr[i, , 1, 1, 1, ]
-  dimnames(slice) <- list(year = year_vals, iteration = iter_vals)
-  df <- as.data.frame(as.table(slice))
-  names(df)[3] <- mname
-  df
-})
-
-# Merge and return
-merged <- Reduce(function(x, y) merge(x, y, by = c("year", "iteration")), out)
-merged <- merged[order(merged$year, merged$iteration), ]
-tibble::as_tibble(merged)
-}
-
-# Example usage for all metrics:
-df_all <- extract_tracking_array(run)
-summary(df_all)
-# Example usage:
-df <- extract_tracking_array(run)
-names(df_all)
-df_all |> dplyr::filter(SB.om<1e5) |> ggplot(aes(x=(SB.om),y=(tac.hcr))) + geom_point(size=.8,alpha=.3) +
-  ggthemes::theme_few()
-summary(tracking(run))
-
-
-# }}}
-
-
 
