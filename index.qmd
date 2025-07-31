@@ -859,7 +859,7 @@ periods <- list(
 
 perf <- readPerformance("demo/performance.dat.gz") 
 perf <- perf |> mutate(data=ifelse((statistic=='F'&data>2),2,data))
-unique(perf$statistic)
+#unique(perf$statistic)
 perf<-  perf %>%
   mutate(
     # Extract the part after "_d" and before "_hcr"

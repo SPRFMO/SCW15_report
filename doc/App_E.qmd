@@ -3,7 +3,8 @@ title: Appendix E. Notes on the Jack Mackerel MSE Framework
 format: 
   html:
     embed-resources: true
-# Appendix E. Notes on the Jack Mackerel MSE Framework {#app-notes .unnumbered}
+editor_options: 
+  chunk_output_type: console
 ---
 # Overview
 This document is a collection of notes on the structure and behavior of key objects used
@@ -289,11 +290,14 @@ inform harvest control rules (HCRs). These functions standardize or
 compare CPUE time series across simulations and reference periods. The
 three primary scoring methods are:
 
--   `cpuescore.z`
--   `cpuescore.mean`
--   `cpuescore.level`
+  -   `cpuescore.z`
+  -   `cpuescore.mean`
+  -   `cpuescore.level`
 
-------------------------------------------------------------------------
+These names were modified from the original `cpuescore` functions to
+provide more clarity. Future iterations may refactor this naming convention
+to reflect that they are more generally indices (e.g., from surveys). This
+may avoid confusion terminology that relates to fishery-dependent indices--i.e., CPUEs.
 
 ## 1. Z-score Standardization: `cpuescore.z`
 
@@ -320,7 +324,6 @@ score <- (met[, ac(dy[i])] %-% yearMeans(ref)) %/% sqrt(yearVars(ref))
 Useful when you want to assess relative anomalies in CPUE from expected
 trends.
 
-⸻
 
 ## 2. Mean Ratio: cpuescore.mean
 
@@ -509,11 +512,27 @@ output <- bufferdelta.hcr(result$stk, result$ind, args = args, tracking = result
 
 ### Helper Functions to Plot Results
 
+The `Slick` software, in addition to providing an interface for examining OMs and 
+MPs, also provides some helper functions to visualize the results of the
+MPs simulations directly. The examples in the following code chunk illustrate some
+of these features.
+
+
 ```{r}
 #| eval: false
-plot_slick_quilt(sli, stat = "longterm C")
-plot_slick_spider(sli, om_idx = 1, mp_idx = 2)
-plot_slick_tradeoff(sli, stat = "PSBMSY")
+
+sli <- readRDS(here::here("demo", "PayaShortCuts_2.slick"))
+
+plotQuilt(sli, kable=TRUE, signif=2)
+plotKobe(sli, Time=TRUE, xmax=1.8, ymax=1.2)
+plotSpider(sli )
+
+plotTradeoff(FilterSlick(sli, MPs=c(2,6,10), plot='Tradeoff'), c(1,1,1,1), c(2,12,4,5))
+plotTradeoff(FilterSlick(sli, MPs=1:4, plot='Tradeoff'), c(1,1,1,1), c(2,12,4,5))
+plotTimeseries(FilterSlick(sli, MPs=1:4, plot='Timeseries'), PI=2, includeHist=FALSE)
+plotTimeseries(FilterSlick(sli, MPs=1:4, plot='Timeseries'), PI=3, includeHist=FALSE)
+plotTimeseries(FilterSlick(sli, MPs=c(2,6,10), plot='Timeseries'), includeHist=FALSE, PI=2)
+
 ```
 
 
@@ -536,18 +555,24 @@ Procedures (MPs) and Operating Models (OMs).
 
 ------------------------------------------------------------------------
 
-### Creating and Visualizing a Slick Object
+The `R code` below demonstrates how to load the operating model (OM) and
+compute baseline performance metrics so that the 
+OM performance with MP results using the `getSlick()` function can be run.
 
 ```{r}
 #| eval: false
 # Load OM and compute baseline performance
-h1 <- qread("data/h1_1.07.qs")
+h1 <- om #qread("data/h1_1.07.qs")
 om <- iter(h1$om, seq(100))
 omperf <- performance(om, years = 1970:2023, statistics = statistics[c("C", "F", "SB")])
 
-perf <- readPerformance("demo/performance.dat.gz")
+perf <- readPerformance(here::here("demo","performance.dat.gz"))
+head(perf)
+head(omperf)
+summary(omperf)
 
 # Combine with MP results (perf), filtering to "tune" runs
+sli <- getSlick(perf, omperf, kobeyrs = 2034:2042)
 sli <- getSlick(perf[grep("tune", run)], omperf, kobeyrs = 2034:2042)
 ```
 
