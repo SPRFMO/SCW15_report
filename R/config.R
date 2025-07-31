@@ -16,6 +16,7 @@ library(qs)
 
 # SOURCE extra functions
 source(here::here("R", "utilities.R"))
+source(here::here("R", "plots.R"))
 
 # SETUP parallel
 library(doFuture)

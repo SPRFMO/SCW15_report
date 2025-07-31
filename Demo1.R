@@ -50,6 +50,25 @@ ctrl <- mpCtrl(list(
 
 run <- mp(om, oem, iem=iem, ctrl=ctrl, args=mseargs)
 
+plot(FLQuants(
+    `SB/SB[MSY]`= window(ssb(om)$CJM, end=2024) / refpts(om)$SBMSY,
+    `F/F[MSY]`= window(fbar(om)$CJM, end=2024) / refpts(om)$FMSY,
+    `SB/SB[0]`= window(ssb(om)$CJM, end=2024) / refpts(om)$SB0),
+    `Recruits`= window(rec(om)$CJM, end=2024),
+    worm=c(1, 45, 99, 22, 33)) +
+  geom_hline(yintercept=1, linetype=2, alpha=0.5)
+
+plot(om,run)
+p1 <- plot(run)
+names(p1$data)
+unique(p1$data$age)
+summary(p1$data)
+showMethods(plot)
+?plot(run)
+slotNames(run@tracking )
+(run@tracking@.Data )
+as.matrix(run@data["worms", , drop = FALSE])
+
 # RUN2
 # MP control
 ctrl <- mpCtrl(list(
@@ -103,6 +122,8 @@ geom_point(size=1.0,alpha=.5) + ggthemes::theme_few() + geom_smooth()
 runs <- FLmses(list(run1=run, run2=run2, run3=run3 ), statistics=statistics,
                years=2024:2045, metrics=mets, type="scgood_buffer")
 
+is.list(targets )
+targs <- FLmses()
 writePerformance(performance(runs), file="demo/runs.dat.gz")
 performance(runs)[statistic == 'green' & year %in% 2034:2042, .(green=mean(data))]
 
@@ -192,6 +213,9 @@ ctrl <- mpCtrl(list(
 
 # TEST:
 tes4 <- mp(om, oem, iem=iem, ctrl=ctrl, args=mseargs)
+str(tracking(tes4)@.Data)
+slotNames(tracking(tes4))
+names(df_tes)
 
 df_tes <- rbind(
 extract_tracking_array(tes)  |> dplyr::mutate(run="i3_1.0 1.0"),
@@ -200,8 +224,8 @@ extract_tracking_array(tes3)  |> dplyr::mutate(run="i3_0.5 1.4"),
 extract_tracking_array(tes4)  |> dplyr::mutate(run="i3_0.5 Jim")
 )
 names(df_tes)
-df_tes |> dplyr::filter(SB.om<.50e5) |> ggplot(aes(x=(SB.om),y=(tac.hcr), color=run)) + 
-geom_point(size=1.0,alpha=.5) + ggthemes::theme_few() + geom_smooth()
+plotly::ggplotly(df_tes |> dplyr::filter(SB.om<.50e8) |> ggplot(aes(x=(SB.om),y=(tac.hcr), color=run)) + 
+geom_point(size=1.0,alpha=.5) + ggthemes::theme_few() + geom_smooth())
 
 df_tes |> dplyr::filter(SB.om<.30e5) |> ggplot(aes(x=(cpue.ind),y=(tac.hcr), color=run)) + 
 geom_point(size=1.0,alpha=.5) + ggthemes::theme_few() + geom_smooth()
@@ -209,7 +233,15 @@ geom_point(size=1.0,alpha=.5) + ggthemes::theme_few() + geom_smooth()
 df_tes |> dplyr::filter(SB.om<.30e5) |> ggplot(aes(x=(cpue.ind),y=(tac.hcr), color=run)) + 
 geom_point(size=1.0,alpha=.5) + ggthemes::theme_few() + geom_smooth()
 
-names(df_tes)
+df_tes |> dplyr::filter(run=="i3_0.5 1.4", SB.om<.30e5) |> 
+arrange(year)  |> 
+ggplot(aes(x=year,y=(tac.hcr), color=iteration)) + 
+geom_line(alpha=.5) + ggthemes::theme_few() #+ geom_smooth()
+
+library(tidyverse)
+summary(df_tes)
+unique(df_tes$year)
+(df_tes$year <- 2025+as.numeric(df_tes$year))
 
 
 

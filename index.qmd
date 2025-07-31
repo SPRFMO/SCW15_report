@@ -7,6 +7,8 @@ format:
     toc-depth: 3
     code-fold: true
     code-summary: "Show code"
+    number_sections: true
+    section_depth: 3
     fig-cap-location: margin
     fig-align: center
     fig-width: 7
@@ -32,7 +34,7 @@ reviewers to review recent progress and refine the MSE framework being
 developed under SPRFMO. The primary goal of the workshop was to ensure
 that the modeling framework and management procedures (MPs) are
 scientifically sound, technically transparent, and aligned with
-management priorities as outlined by the Commission (e.g., @sprfmo2025jmwgmse)
+management priorities as outlined by the Commission (e.g., @sprfmo2025jmwgmse.
 
 ### Key Outcomes and Advancements
 
@@ -571,4 +573,420 @@ on the following tasks:
 :::
 
 \clearpage
+
+# Examples of Shortcut MPs {#sec-shortcut}
+
+This section was compiled by Ignacio Payá and colleagues from Chile. 
+It summarizes an example implementation of "shortcut" management procedures (MPs) that simplify the estimation and harvest control rule (HCR) steps using buffered depletion-based control. 
+It also illustrates how FLR-based tools can be used to define control logic, evaluate HCR targets, 
+and visualize results using the `Slick` (@slick2024) and `mseviz` (@mseviz2022) R packages.
+for performance evaluation. Each section below includes code, explanation, and figures 
+that demonstrate specific aspects of the approach.
+
+## Shortcut MP Definition {#sec-def}
+
+This section defines the MP structure using `mpCtrl()` with shortcut estimation (`shortcut.sa`),
+a buffer-based HCR, and a split implementation system (ISYS). Deviations are defined using a lognormal AR(1) process.
+
+```{r mp-definition}
+#| eval: false
+#| echo: false
+#| message: false
+#| warning: false
+source(here::here("R","config.R") )
+mkdir("demo")
+
+# LOAD H1 inputs: om, oem, iem
+qload('data/h1_1.07.qs')
+
+# SET OEM
+method(oem) <- shortcut.oem
+args(oem)$jjms <- FALSE
+
+# SELECT stock for MP
+mseargs$stock <- 1
+plan(sequential)
+
+metdevs <- rlnormar1(dims(om)$iter, meanlog=0, sdlog=0.15, rho=0, years=seq(1970, 2045))
+
+ctrl <- mpCtrl(list(
+  est = mseCtrl(method=shortcut.sa, args=list(metric="depletion", devs=metdevs, B0=refpts(om)$SB0)),
+  hcr = mseCtrl(method=buffer.hcr,
+               args=list(target=1000, bufflow=0.30, buffupp=0.50, lim=0.10, min=0, metric="depletion")),
+  isys = mseCtrl(method=split.is, args=list(split=catch_props(om)$last5))
+))
+```
+
+
+### HCR Target Exploration {#sec-hcr}
+
+To evaluate MP performance under various Total Allowable Catch (TAC) values, the 
+control object from \[Section @sec-def] is tested across a set of TAC multipliers. 
+The target range brackets the 2025 CMM level.
+This produces comparative projection plots for four candidate TAC levels (@fig-tac-proj).
+
+```{r hcr-targets}
+#| eval: false
+#| echo: false
+#| message: false
+#| warning: false
+TAC2025 <- 1552.5
+
+targets <- mps(om, oem, ctrl=ctrl, args=mseargs,
+               hcr=list(target=c(TAC2025*0.85, TAC2025, TAC2025*1.15, TAC2025*1.25)))
+png("images/Projections_Sc_har_Around_TAC2025.png", width=800, height=450)
+  plot(om, targets) + ggthemes::theme_few() 
+dev.off()
+```
+
+
+![Projections for TAC 2025 scenarios using buffer HCR.](images/Projections_Sc_har_Around_TAC2025.png){#fig-tac-proj fig-align="center"}
+
+
+
+Now we test this with a simple limit on the annual change in TAC, which is a common requirement 
+in many fisheries management systems. These results compare similarly to those without
+any TAC constraint (@fig-targets_lim). A clearer evaluation of these two sets
+is shown in the next section using the `Slick` package.
+
+![Projections for TAC 2025 scenarios using buffer HCR with TAC change limit at 15 percent.](images/Projections_Sc_har_Around_TAC2025_lim.png){#fig-targets_lim fig-align="center"}
+
+
+![Projections for TAC 2025 scenarios using buffer HCR with TAC change limit at 25% (downward) and 15% increases.](images/Projections_Sc_har_Around_TAC2025_lim2515.png){#fig-targets_lim fig-align="center"}
+
+
+
+```{r hcr-targets-limits}
+#| echo: true
+#| eval: false
+#| message: false
+#| warning: false
+args(ctrl$hcr)[c("dlow", "dupp")] <- c(0.85, 1.15)
+targets_lim15 <- mps(om, oem, ctrl=ctrl, args=mseargs,
+               hcr=list(target=c(TAC2025*0.85, TAC2025, TAC2025*1.15, TAC2025*1.25)))
+png("images/Projections_Sc_har_Around_TAC2025_lim.png", width=800, height=450)
+  plot(om, targets_lim15) + ggthemes::theme_few() 
+dev.off()
+##--Now with 25% change down, 15% uupper 
+args(ctrl$hcr)[c("dlow", "dupp")] <- c(0.75, 1.15)
+targets_lim2515 <- mps(om, oem, ctrl=ctrl, args=mseargs,
+               hcr=list(target=c(TAC2025*0.85, TAC2025, TAC2025*1.15, TAC2025*1.25)))
+
+png("images/Projections_Sc_har_Around_TAC2025_lim2515.png", width=800, height=450)
+  plot(om, targets_lim2515) + ggthemes::theme_few() 
+dev.off()
+##--Now with 25% change down, 15% uupper 
+
+```
+
+
+### Using openMSE's Slick Output {#sec-slick}
+
+Using the `Slick` package  (@slick2024), performance metrics such as catch, 
+fishing mortality, and spawning biomass can be summarized across operating models and MPs.
+As one illustration of the application, we presents a Kobe-style status time series from `Slick`.
+We compare three shortcut management procedures (MPs)
+all tuned to the 2025 TAC level (1.55 million t) but differing in constraints on
+interannual TAC changes (@fig-slick_kobe_time). The panels from left to right represent: (1) no
+constraint (1.0), (2) symmetric ±15% TAC change limit (1.0_d15), and (3)
+asymmetric −25%/+15% limit (1.0_d2515). Each panel shows the proportion of
+simulations over time falling into the green (safe), yellow (overfished or
+overfishing), and red (overfished and overfishing) zones. While all three MPs
+maintain a majority of simulations in the green zone, applying TAC constraints
+leads to a slight increase in the proportion of years falling into the red
+zone—particularly under the asymmetric constraint. This reflects the trade-off
+where increased catch stability may slightly elevate biological risk under
+certain scenarios. We provide a copy of the slick file on the repository under MS Teams
+at [tbd].
+
+
+![Shortcut application tuned to the 2025 TAC (1,552,500 t) but with different constraints on TAC changes. Left most is no constraint, middle is 15% increase and decrease, right-most is 25% decrease and 15% increase.](images/slick_kobe_time.png){#fig-slick_kobe_time fig-align="center"}
+
+```{r slick-output}
+#| echo: true
+#| eval: false
+#| message: false
+#| warning: false
+library(Slick)
+targs_lim2515 <- FLmses(targets_lim2515, statistics=statistics,
+               years=2024:2045, metrics=mets, type="scgb_d2515")
+
+targs_lim <- FLmses(targets_lim15, statistics=statistics,
+               years=2024:2045, metrics=mets, type="scgb_d15")
+
+targs <- FLmses(targets, statistics=statistics,
+               years=2024:2045, metrics=mets, type="scgb_d00")
+perf <- rbind(performance(targs),performance(targs_lim))
+omperf <- performance(om, statistics=statistics[c("C", "F", "SB")])
+writePerformance(perf, file="demo/targets.dat.gz")
+head(perf)
+tail(perf)
+unique(perf$mp)
+
+sli <- getSlick(perf, omperf, kobeyrs=2034:2042)
+sli@MPs@Label
+sli@MPs@Label <- c("0.85", "1.0", "1.15", "1.25", "0.85_d15", "1.0_d15", "1.15_d15", "1.25_d15"    )
+sli@MPs@Description <- sli@MPs@Label
+sli@MPs@Code <- sli@MPs@Label
+App(slick = sli)
+
+#--Now show contrasts for current TAC limit (1,552,500 t)
+
+performance(targs_lim2515)
+perf <- rbind(performance(targs),performance(targs_lim),performance(targs_lim2515))
+# ptmp <- perf |> filter(str_detect(mp, "1552.5")) 
+# unique(ptmp$mp)
+sli <- getSlick(perf, omperf, kobeyrs=2034:2042)
+sli@MPs@Label
+sli@MPs@Label <- c("0.85", "1.0", "1.15", "1.25", 
+                   "0.85_d15", "1.0_d15", "1.15_d15", "1.25_d15", 
+                   "0.85_d2515", "1.0_d2515", "1.15_d2515", "1.25_d2515"  )
+sli@MPs@Description <- sli@MPs@Label
+sli@MPs@Code <- sli@MPs@Label
+App(slick = sli)
+
+saveRDS(sli, file="demo/PayaShortCuts_2.slick")
+```
+
+
+## Other tools for viewing performance indicators {#sec-flr}
+
+This section summarizes performance using FLR tools from the `mseviz` package (@mseviz2022). 
+Average values are computed for specified periods and used in BRP (Biological Reference Point) and tradeoff plots.
+
+```{r }
+#| eval: false
+#| label: perf-periods
+#| echo: true
+#| message: false
+#| warning: false
+library(mseviz)
+writePerformance(perf,"demo/performance.dat.gz")
+periods <- list(
+  tuning = 2034:2045,
+  short  = 2025:2027,
+  medium = 2027:2032,
+  long   = 2033:2045
+)
+```
+
+```{r }
+#| eval: false
+#| label: plot-bps-tuning
+#| echo: true
+#| fig-cap: "BRP Plot for Tuning Period (2034–2045)"
+
+perf <- readPerformance("demo/performance.dat.gz") 
+perf <- perf |> mutate(data=ifelse((statistic=='F'&data>2),2,data))
+unique(perf$statistic)
+perf<-  perf %>%
+  mutate(
+    # Extract the part after "_d" and before "_hcr"
+    d_part = str_extract(mp, "(?<=_d)[^_]+"),
+    # Extract the trailing number after the last "_"
+    target_num = str_extract(mp, "[0-9.]+$"),
+    # Create short name by combining them
+    mp  = paste0("d", d_part, "_", 
+                 ifelse(target_num==1319.62,"0.85",
+                 ifelse(target_num==1552.5,"1.0",
+                 ifelse(target_num==1785.37,"1.15","1.25"))))
+  )
+perf <- periodsPerformance(perf, periods) 
+# perf |> filter(period=='tuning', statistic %in% c("SB","C", "IACC"),  mp %in% c("d00_1.0", "d15_1.0", "d2515_1.0")) |>
+#   ggplot(aes(x=as.factor(mp),y=data,fill=mp)) + geom_boxplot(outlier.shape=NA) + ggthemes::theme_few() +
+#   facet_wrap(.~statistic, scales="free_y") 
+
+png("images/sc_delta_TAC.png", width=900, height=800)
+plotBPs(perf |> 
+          filter(period=='tuning',  mp %in% c(
+            "d00_1.0", 
+            "d15_1.0", 
+            "d2515_1.0"
+            )) , statistics=c(
+            "C",
+            "IACC",
+            "F",
+            "PTAClimit",
+            "SB" 
+            )) +
+  ggtitle("Shortcut MPs for Tuning Period (2034–2045)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("MP")
+  
+dev.off()
+
+png("images/sc_targ_TAC.png", width=900, height=800)
+plotBPs(perf |> 
+          filter(period=='tuning',  mp %in% c(
+            "d00_0.85", 
+            "d00_1.0", 
+            "d00_1.15", 
+            "d00_1.25" 
+            )) , statistics=c(
+            "C",
+            "IACC",
+            "F",
+            "SB" 
+            )) +
+  ggtitle("Shortcut MPs for Tuning Period (2034–2045)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("MP")
+  
+dev.off()
+```
+
+The performance of shortcut management procedures (MPs) over the tuning period (2034–2045) were contrasted as an example. 
+Here, each MP was run with catch "targets" at different level relative to the 2025 TAC (1.5525 million t).
+They ranged from 85% (d00_0.85)  to 125% (d00_1.25), with no constraints on interannual TAC changes. 
+As expected, higher catch targets result in greater average catches (mean(C)), but also 
+increased interannual variability (IAC(C)), as well as higher fishing mortality (F) (@fig-targ_TAC). 
+Conversely, spawning biomass (SB) declines with increasing catch target, suggesting 
+a clear trade-off between yield and stock conservation. While d00_1.0 balances moderate 
+catch with more stable biomass and fishing pressure, higher targets (d00_1.15 
+and d00_1.25) achieve larger catches at the cost of reduced SB and greater 
+volatility—highlighting the importance of considering both yield and stability objectives when selecting candidate MPs.
+
+We then compared performance of shortcut MPs all tuned to the 2025 TAC target (1.5525 million t), but with 
+different constraints on interannual changes in TAC. These included (as in the previous figure)
+no constraint on TAC changes (d00), a symmetric ±15% constraint (d15), and an asymmetric −25%/+15% constraint (d2515). 
+While mean catch (mean(C)) is similar across all three MPs, the application of TAC 
+constraints notably reduces interannual variability (IAC(C)) compared to the unconstrained case (@fig-deltaTAC). 
+This stability comes with trade-offs—particularly a modest increase in the probability of 
+hitting a predefined TAC floor (P(TAClimit)) for d15 and d2515. Spawning biomass (SB) 
+and fishing mortality (F) remain broadly similar across scenarios, suggesting that 
+moderate TAC constraints can improve catch stability without severely compromising 
+stock status. Overall, the results highlight the stabilizing benefit of delta-TAC constraints, 
+with d15 offering the most consistent balance of catch, stability, and conservation performance.
+
+As an alternative, we show figures that highlight short-term (2025–2027) trade-offs among shortcut MPs based on either 
+different TAC targets (@fig-targsTO) or different TAC change constraints (@fig-deltaTO). 
+Increasing the TAC target from 85% to 125% of the 2025 TAC
+results in expected increases in catch, but also in fishing mortality (F) and
+interannual catch variability (IAC(C)), with slight declines in spawning biomass
+(SB). All options show negligible probability of hitting the TAC floor
+(P(TAClimit)). In contrast, comparing MPs with the same TAC
+target (2025 level) but different delta-TAC constraints (@fig-deltaTO). While d00_1.0 provides
+slightly higher short-term catch, it exhibits greater catch variability and a
+marginally higher risk of triggering the TAC limit compared to d15_1.0 and
+d2515_1.0. These results suggest that in the short term, applying TAC
+constraints can enhance stability and reduce the risk of severe TAC cuts, albeit
+in catch—highlighting a management choice between
+maximizing short-term yield and reducing volatility.
+
+While the general patterns observed in the short-term persist, the medium-term
+results show reduced separation across MPs in all performance metrics. For
+instance, in the TAC target comparison (top panel), differences in fishing
+mortality (F), interannual catch variability (IAC(C)), and spawning biomass (SB)
+across catch targets narrow considerably. This suggests that the system has
+begun to stabilize, with stock status and catch performance converging even
+under different TAC target levels (@fig-targsTOmed). Similarly, in the delta-TAC constraint
+comparison (@fig-deltaTOmed), the three strategies (d00, d15, d2515) yield almost
+indistinguishable outcomes across all metrics, aside from slightly higher
+uncertainty in the risk of hitting the TAC limit for d15_1.0. This convergence
+indicates that the influence of TAC constraints diminishes as the system
+settles, implying that short-term trade-offs in volatility and yield may be more
+relevant than medium-term differences when selecting among MPs.
+
+
+![Boxplots for shortcut MP with target catches set to different multipliers of the 2025 TAC (e.g., 0.85 is 85% of the 2025 TAC (1.5525 million t).](images/sc_targ_TAC.png){#fig-targ_TAC fig-align="center"}
+
+![Boxplots for shortcut MP with target catches set to the 2025 TAC (1.5525 million t) and with different constraints on annual TAC changes.](images/sc_delta_TAC.png){#fig-deltaTAC fig-align="center"}
+
+!["Trade-off plots for short term results from the shortcut method and different  targets relative to the 2025 TAC (1.5525 million t).](images/sc_targs_TO.png){#fig-targsTO  fig-align="center"}
+
+!["Trade-off plots for short term results from the shortcut method and different  constraints on annual TAC changes).](images/sc_delta_TO.png){#fig-deltaTO  fig-align="center"}
+
+!["Trade-off plots for medium term results from the shortcut method and different  targets relative to the 2025 TAC (1.5525 million t).](images/sc_targs_TO_med.png){#fig-targsTOmed  fig-align="center"}
+
+!["Trade-off plots for medium  term results from the shortcut method and different  constraints on annual TAC changes).](images/sc_delta_TO_med.png){#fig-deltaTOmed  fig-align="center"}
+
+
+
+```{r plot-tos-short}
+#| eval: false
+#| echo: true
+#| fig-cap: "Tradeoff Plot for Short-Term Period (2025–2027)"
+png("images/sc_delta_TO.png", width=900, height=450)
+plotTOs(perf |> 
+          filter(period=='short',  mp %in% c(
+            "d00_1.0", 
+            "d15_1.0", 
+            "d2515_1.0"
+            )) , x="C",
+        y=c(
+            "IACC",
+            "F",
+            "PTAClimit",
+            "SB" 
+            )) + 
+  ggtitle("Shortcut MPs for Short-Term Period (2025–2027)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("Catch")
+dev.off()
+
+
+png("images/sc_targs_TO_med.png", width=900, height=450)
+plotTOs(perf |> 
+          filter(period=='medium',  mp %in% c(
+            "d00_0.85", 
+            "d00_1.0", 
+            "d00_1.15", 
+            "d00_1.25" 
+            )) , x="C",
+        y=c(
+            "IACC",
+            "F",
+            "PTAClimit",
+            "SB" 
+            )) + 
+  ggtitle("Shortcut MPs for Medium-Term Period (2027–2032)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("Catch")
+dev.off()
+
+
+png("images/sc_delta_TO_med.png", width=900, height=450)
+plotTOs(perf |> 
+          filter(period=='medium',  mp %in% c(
+            "d00_1.0", 
+            "d15_1.0", 
+            "d2515_1.0"
+            )) , x="C",
+        y=c(
+            "IACC",
+            "F",
+            "PTAClimit",
+            "SB" 
+            )) + 
+  ggtitle("Shortcut MPs for Medium-Term Period (2027–2032)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("Catch")
+dev.off()
+
+
+png("images/sc_targs_TO.png", width=900, height=450)
+plotTOs(perf |> 
+          filter(period=='short',  mp %in% c(
+            "d00_0.85", 
+            "d00_1.0", 
+            "d00_1.15", 
+            "d00_1.25" 
+            )) , x="C",
+        y=c(
+            "IACC",
+            "F",
+            "PTAClimit",
+            "SB" 
+            )) + 
+  ggtitle("Shortcut MPs for Short-Term Period (2025–2027)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("Catch")
+dev.off()
+```
+
+These diagnostics provide visual summaries of CMP performance across time horizons.
+
+## Summary 
+This appendix presents a full example of how shortcut methods can be configured and evaluated in the jmMSE framework. The use of buffered harvest control, lognormal deviations, and simplified estimation methods make these examples especially useful for scoping and tuning phases of MSE development. Future iterations could generalize the estimation block or integrate OpenMSE for better interoperability.
+
 
