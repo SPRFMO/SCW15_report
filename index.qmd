@@ -7,12 +7,13 @@ format:
     toc-depth: 3
     code-fold: true
     code-summary: "Show code"
-    number_sections: true
-    section_depth: 3
+    number-sections: true
+    number-depth: 2
     fig-cap-location: margin
     fig-align: center
     fig-width: 7
     embed-resources: true
+    reference-location: margin
   pdf:
     documentclass: scrreprt
     papersize: letter
@@ -34,7 +35,8 @@ reviewers to review recent progress and refine the MSE framework being
 developed under SPRFMO. The primary goal of the workshop was to ensure
 that the modeling framework and management procedures (MPs) are
 scientifically sound, technically transparent, and aligned with
-management priorities as outlined by the Commission (e.g., @sprfmo2025jmwgmse.
+management priorities as outlined by the Commission (e.g.,
+@sprfmo2025jmwgmse.
 
 ### Key Outcomes and Advancements
 
@@ -94,20 +96,99 @@ management priorities as outlined by the Commission (e.g., @sprfmo2025jmwgmse.
     reporting needs, including summary tables and figures for managers,
     and exploration of reference points and evaluation criteria beyond
     the green zone probability.
+    
+# Background on the 2025 Commission meeting proposal
 
-# Introduction
+During the 2025 Commission meeting (COMM13), Chile proposed a deviation
+from the established Management Procedure (MP) guidance by recommending
+a Total Allowable Catch (TAC) for *Trachurus murphyi* of 1.785 million
+tonnes for 2025[^1]. This proposal exceeded the 15% year-on-year TAC
+change limit adopted by the Commission as part of its management
+framework[^2]. Chile based its proposal on Article 4.3 of the
+Convention, asserting the need to consider measures by coastal states
+and highlighting that the stock had remained above MSY reference levels
+for over five consecutive years[^3].
 
-Management Strategy Evaluation (MSE) has emerged as a critical tool for fisheries
-management, especially in contexts where data are limited or uncertainty 
-is high. Foundational software frameworks like FLR were developed to 
-facilitate reproducible, cross-disciplinary evaluation of management strategies 
-through simulation and decision analysis [@Kell2007FLR]. Building on this 
-foundation, recent advances have expanded FLR’s capacity for data-rich and 
-data-limited systems alike, improving accessibility and integration with 
-other tools [@Hillary2023FLR]. Complementing these developments, a structured 
-framework for evaluating methods and risk in data-limited fisheries has been 
-proposed, providing practical guidance on the application of MSE in real-world 
-settings [@Carruthers2023].
+[^1]: COMM13-Prop01 and COMM13-Prop01_rev5 (Annex 10d)
+
+[^2]: COMM3-Annex C
+
+[^3]: SPRFMO Convention, Article 4.3
+
+Chile also cited Scientific Committee (SC) analysis, particularly
+paragraph 136 of the SC12 Report, which indicated that the stock was in
+Tier 3 of the adopted Harvest Control Rule (HCR), theoretically allowing
+for a much higher TAC (up to 4.997 Mt) if the full HCR were applied[^4].
+However, as per the Commission's directive to the SC (COMM3-Annex C),
+catch advice was constrained to not exceed a 15% increase, consistent
+with the MP in place[^5].
+
+[^4]: SC12 Report, Paragraph 136
+
+[^5]: COMM3-Annex C
+
+The Scientific Committee Chair emphasized in plenary that the SC's
+advice adhered to the current MP, limiting TAC changes to ±15% to
+account for uncertainties, including potential model misspecification.
+Paragraphs 136 and 137 of the SC12 report note that this constraint was
+not intended to account for rebuilding potential, but rather to ensure
+precautionary stability and reduce the risk of large interannual TAC
+fluctuations[^6].
+
+[^6]: SC12 Report, Paragraph 137
+
+Chile revised its proposal multiple times (COMM13-Prop01_rev1 through
+rev5) to address Member concerns, including scientific justification,
+process adherence, and future management stability. Nevertheless, many
+Members expressed concern that implementing a TAC increase beyond 15%
+ahead of finalizing the MSE would undermine the credibility of the HCR
+framework and create challenges for future rule-based decisions.
+
+Chile also referred to Table 37 of Annex 7 of the SC12 report, which
+showed that biomass remained above target levels under various fishing
+scenarios. However, the SC Chair cautioned that these projections were
+illustrative only and not intended for management advice[^7]. The SC
+further stressed that alternative scenarios outside the adopted HCR
+should be evaluated through MSE before informing decisions.
+
+[^7]: SC12 Report, Table 37 of Annex 7
+
+Following intensive discussions and compromises, the Commission adopted
+a revised proposal (COMM13-Prop01_rev5), establishing a one-year TAC of
+1.785 Mt for 2025 while reaffirming:
+
+-   The importance of completing the MSE and adopting a revised MP and
+    HCR by 2026;
+-   The temporary nature of the 2025 deviation;
+-   The application of Article 20(5) of the Convention to enable
+    responsive management should the stock decline[^8].
+
+[^8]: SPRFMO Convention, Article 20(5)
+
+<!-- `(1,419,119-1,135,297)/1,135,297 = 25%` -->
+
+<!-- We note that the  *Trachurus murphyi* undertaken by vessels flagged to Members and Cooperating Non-Contracting Parties (CNCPs) included on the Commission Record of Vessels (CMM 05-2023) in the Convention Area and, in accordance with Article 20(4)(a)(iii) and with the express consent of Chile and Ecuador, to fisheries for *Trachurus murphyi* undertaken by Chile and Ecuador in areas under their national jurisdiction. -->
+
+This episode highlighted both the limitations of static MP rules under
+changing stock and socioeconomic conditions, and the importance of
+timely completion of the MSE process to provide more flexible and
+scientifically robust guidance.
+
+
+# Workshop introduction
+
+Management Strategy Evaluation (MSE) has emerged as a critical tool for
+fisheries management, especially in contexts where data are limited or
+uncertainty is high. Foundational software frameworks like FLR were
+developed to facilitate reproducible, cross-disciplinary evaluation of
+management strategies through simulation and decision analysis
+[@Kell2007FLR]. Building on this foundation, recent advances have
+expanded FLR’s capacity for data-rich and data-limited systems alike,
+improving accessibility and integration with other tools
+[@Hillary2023FLR]. Complementing these developments, a structured
+framework for evaluating methods and risk in data-limited fisheries has
+been proposed, providing practical guidance on the application of MSE in
+real-world settings [@Carruthers2023].
 
 The SCW15 Jack Mackerel MSE Technical Workshop was convened in response
 to the Scientific Committee’s request for progress on developing and
@@ -193,38 +274,35 @@ exercise were available and implemented. However, the group struggled
 with getting the candidate MPs defined relative to available indices
 ("stage 1" in the diagram).
 
-The appendices provide the 
-[participants](doc/App_A.qmd)
-[participants](#app-participants), 
-the [agenda](doc/App_B.qmd) and the daily summary activities in the workshop
-[minutes](doc/App_C.qmd). The review from the external experts is
-also summarized in an [appendix](doc/App_D.qmd) as well.
+The appendices provide the [participants](doc/App_A.qmd), the
+[agenda](doc/App_B.qmd), and the daily summary activities in the
+workshop [minutes](doc/App_C.qmd). A summary review written by the
+external experts is also [provided here](doc/App_D.qmd).
 
 The following sections detail the discussion on how best to incorporate
 some environmental effects for projecting from the operating model.
 Specifically, we considered how to account for the effects of El Niño on
-recruitment and catchability/availability.
-We follow this with a sections reviewing the OM and then some results from 
-applying existing and refined MPs. We conclude with a set of recommendations for 
-the SC to consider.
+recruitment and catchability/availability. We follow this with a
+sections reviewing the OM and then some results from applying existing
+and refined MPs. We conclude with a set of recommendations for the SC to
+consider.
 
 # Simulating El Niño effects in the Operating Model
 
 To incorporate climate-driven variability into the Operating Model (OM)
-projections, we defined a scenario simulating El Niño–like events every five years
-beginning in 2030. These events affect primarily recruitment and
-distribution options. Based on the work of Iago and available literature, we
-proposed biological and fishery
-processes that may relate to El Niño conditions. The group discussed these and noted
-that they could be evaluated in the next round of stock assessment
-benchmark and for future MSE work.
+projections, we defined a scenario simulating El Niño–like events every
+five years beginning in 2030. These events affect primarily recruitment
+and distribution options. Based on the work of Iago and available
+literature, we proposed biological and fishery processes that may relate
+to El Niño conditions. The group discussed these and noted that they
+could be evaluated in the next round of stock assessment benchmark and
+for future MSE work.
 
 The table below summarizes the proposed effects of simulated El Niño
-conditions on the OM, categorizing them by their
-expected direction, biological or fishery-based justification, and
-evaluation priority. The table is divided into two sections: effects
-that are prioritized for immediate evaluation and those deferred for
-further study.
+conditions on the OM, categorizing them by their expected direction,
+biological or fishery-based justification, and evaluation priority. The
+table is divided into two sections: effects that are prioritized for
+immediate evaluation and those deferred for further study.
 
 The first items highlights two key El Niño-driven effects: A 30%
 increase in recruitment with a one-year lag, linked to ENSO-related
@@ -347,12 +425,12 @@ changes.
 
 # Review of the Operating Model specifications
 
-The workshop reviewed the current specifications of the 
-OMs. In particular, the assumptions for the reference point
-calculations were discusssed and contrasted with the 2024 assessment
-results and reports (@sprfmo2024annex7). Due to the terminal (2024)
-estimates of fisheries selectivities, the assessment report had
-anomalously high values for $F_{MSY}$
+The workshop reviewed the current specifications of the OMs. In
+particular, the assumptions for the reference point calculations were
+discusssed and contrasted with the 2024 assessment results and reports
+(@sprfmo2024annex7). Due to the terminal (2024) estimates of fisheries
+selectivities, the assessment report had anomalously high values for
+$F_{MSY}$
 
 While the 2024 stock assessment produced high estimates of potential
 catch under the third tier of the harvest control rule—exceeding 4,900
@@ -361,13 +439,14 @@ likely upward bias in $F_{{MSY}}$ estimates caused by strong selection
 on older fish. As a result, the Scientific Committee recommended
 constraining the 2025 TAC to be at or below 1,428 kt, representing only
 a 15% increase from 2024 levels and aligned with the Commission’s
-guidance. In developing the OM, reference points such
-as $F_{{MSY}}$ were instead based on longer-term averages to avoid the
-influence of short-term variability or cohort effects, ensuring more
-stable and precautionary management advice consistent with the MSE
-framework (@fig-ref_pts).
+guidance. In developing the OM, reference points such as $F_{{MSY}}$
+were instead based on longer-term averages to avoid the influence of
+short-term variability or cohort effects, ensuring more stable and
+precautionary management advice consistent with the MSE framework
+(@fig-ref_pts).
 
-![Distribution of reference points from the operating model accepted by the workshop.](images/ref_pts.png){#fig-ref_pts}
+![Distribution of reference points from the operating model accepted by
+the workshop.](images/ref_pts.png){#fig-ref_pts}
 
 Several issues were identified with the current stock assessment that
 warrant further attention ahead of the next benchmark. Key among them
@@ -395,17 +474,17 @@ of MP specification issues prior to the SC and/or holding a separate
 follow-up technical meeting, ideally in person. This would focus
 discussion on narrowing MP options. Depending on this direction, it may
 mean that such a meeting would have to occur after February 2026 and the
-Commission meeting. 
+Commission meeting.
 
-Regarding the ability and facility for member scientists to use and evaluate
-the MSE framework, the group noted that the development of the jmMSE package 
-was exceptionally  well done. We found that difficulties inherent to the jack
-mackerel resource and assessment created unique problems. Specifically, the 
-variable resource distribution, available data, 
-and specifications of projection conditions (e.g., mean body mass-at-age, fishery
-selectivity at age) complicated how MPs could be evaluated. We noted that such
-specifications would be problematic for any other MSE framework as well. 
-
+Regarding the ability and facility for member scientists to use and
+evaluate the MSE framework, the group noted that the development of the
+jmMSE package was exceptionally well done. We found that difficulties
+inherent to the jack mackerel resource and assessment created unique
+problems. Specifically, the variable resource distribution, available
+data, and specifications of projection conditions (e.g., mean body
+mass-at-age, fishery selectivity at age) complicated how MPs could be
+evaluated. We noted that such specifications would be problematic for
+any other MSE framework as well.
 
 ### Software and Technical Recommendations
 
@@ -414,9 +493,8 @@ specifications would be problematic for any other MSE framework as well.
 
 -   Improve naming conventions in code to reduce ambiguity. For example:
 
-    -   Functions like `cpuescore2.ind` and `cpuescore3.ind` could better reflect their
-        purpose.
-
+    -   Functions like `cpuescore2.ind` and `cpuescore3.ind` could
+        better reflect their purpose.
 
 ### MSE Development Timeline and Deliverables
 
@@ -461,9 +539,75 @@ Planned products:
 
     -   TSD v1 by end of September.
 
-### Recommendations
+### Near term tasks
 
-#### For SC:
+Participants were encouraged to document their activities during the
+workshop, including the methods explored and tuning targets used. Work
+tasked identified included:
+
+-   **All** continue to evaluate MPs to the extent practical ensuring
+    that they can be tuned to achieve a 60% green status and are
+    consistent with the available OM data stream projections.
+
+-   **Jim** evaluated 9 MPs (including `bufferdelta2`, `cpuescore2`,
+    test acoustic, and combinations of CPUE indices with different
+    `delta_TAC` values), all tuned to achieve 60% green status.
+
+-   **Chilean analysts** apply shortcut tuning methods as a
+    demonstration. This was completed and provided in @sec-shortcut.
+
+This table illustrates how an array of MPs might be evaluated for
+summarization:
+
+| Year | Method | Metric | Tuning Parameter | Other Parameters | Score Index | Comments |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| 2024+ | `buffer.hcr` | depletion | target | bufflow, buffup, limit | `cpuescore3.ind` | Original pkg function |
+| 2024+ | `bufferdelta.hcr` | depletion | width | sloperatio | `cpuescore3.ind` | Modified; not compatible with z-score metrics |
+| 2024+ | `bufferdelta2.hcr` | zscore | width | sloperatio | `cpuescore2.ind` | New; not compatible with depletion |
+| 2024+ | `buffer2.hcr` | zscore | target | width (affects buffer) | `cpuescore2.ind` | Original; adjusted for zscore (limit = -2 SD) |
+
+
+The SC Chair, Ricardo developed some enhancements to the jmMSE demo 
+framework after the workshop. These introduce greater flexibility
+and diagnostic power through two key components: performance2() and
+evaluate_mp(). The performance2() function extends standard summary outputs by
+computing a richer set of indicators—such as mean relative biomass and fishing
+mortality, catch, the probability of remaining in the green zone of the Kobe
+plot, and the longest duration spent outside it.
+<!-- (@fig-performance2).  -->
+The evaluate_mp() function wraps the full
+MP simulation while allowing multi-parameter optimization of Harvest Control
+Rule (HCR) settings, and it incorporates a customizable objective function that
+accounts for discounted catch, stability (via IACV), conservation thresholds
+(e.g., probability of being “green”), and duration outside target reference
+points. This setup allows for filtering out implausible simulations, facilitates
+adaptive MP tuning, and supports rapid exploration of trade-offs in management
+performance. Together, these tools make the MSE evaluation process more
+transparent, efficient, and tailored to decision-maker priorities.
+
+This and other work conducted after the workshop encountered problems with the
+magnitude of recruitment variability which led to unreasonably high levels
+of biomass in a significant number of the simulations. This was something that
+required further investigation and resolution in collaboration with the developer (Iago). 
+
+
+### Medium term tasks
+
+The group agreed to continue working on the MSE framework, with a focus
+on the following tasks: - **Consider how reference set of OMs could be
+regenerated** conditioned to historical data using MCMC methods. -
+**Implement robustness tests** to evaluate how MPs perform under a range
+of plausible yet uncertain scenarios. - **Refine MP candidates** using
+the jmMSE software package, ensuring they are scientifically sound and
+technically transparent. - **Document and share** the MSE framework,
+including model assumptions, data sources, and MP structure. - **Explore
+additional diagnostics** and refinements, including new performance
+metrics that reflect stock status and trends in the final projection
+years.
+
+## Further recommendations to consider
+
+### For the SC:
 
 -   Adopt the current proposal structure with flexibility for future
     adjustment.
@@ -474,14 +618,14 @@ Planned products:
 -   Consider a placeholder method for calculating the 2026 TAC if MSE
     work is not yet finalized.
 
-#### For Members:
+### For Members:
 
 -   Commit to a shared MSE software base (FLR or openMSE).
 
 -   Engage in pre-SC online meetings to broaden participation in MSE
     discussions.
 
-#### For Analyst (Iago):
+### For Analyst (Iago):
 
 -   Prioritize enhancements discussed during the workshop:
 
@@ -493,80 +637,6 @@ Planned products:
 
 -   Identify successor strategy after contract ends in 2025.
 
-# Jack mackerel MSE workplan
-
-During the 2025 Commission meeting (COMM13), Chile proposed a deviation from the established Management Procedure (MP) guidance by recommending a Total Allowable Catch (TAC) for *Trachurus murphyi* of 1.785 million tonnes for 2025[^1]. This proposal exceeded the 15% year-on-year TAC change limit adopted by the Commission as part of its management framework[^2]. Chile based its proposal on Article 4.3 of the Convention, asserting the need to consider measures by coastal states and highlighting that the stock had remained above MSY reference levels for over five consecutive years[^3].
-
-Chile also cited Scientific Committee (SC) analysis, particularly paragraph 136 of the SC12 Report, which indicated that the stock was in Tier 3 of the adopted Harvest Control Rule (HCR), theoretically allowing for a much higher TAC (up to 4.997 Mt) if the full HCR were applied[^4]. However, as per the Commission's directive to the SC (COMM3-Annex C), catch advice was constrained to not exceed a 15% increase, consistent with the MP in place[^2].
-
-The Scientific Committee Chair emphasized in plenary that the SC's advice adhered to the current MP, limiting TAC changes to ±15% to account for uncertainties, including potential model misspecification. Paragraphs 136 and 137 of the SC12 report note that this constraint was not intended to account for rebuilding potential, but rather to ensure precautionary stability and reduce the risk of large interannual TAC fluctuations[^5].
-
-Chile revised its proposal multiple times (COMM13-Prop01_rev1 through rev5) to address Member concerns, including scientific justification, process adherence, and future management stability. Nevertheless, many Members expressed concern that implementing a TAC increase beyond 15% ahead of finalizing the MSE would undermine the credibility of the HCR framework and create challenges for future rule-based decisions.
-
-Chile also referred to Table 37 of Annex 7 of the SC12 report, which showed that biomass remained above target levels under various fishing scenarios. However, the SC Chair cautioned that these projections were illustrative only and not intended for management advice[^6]. The SC further stressed that alternative scenarios outside the adopted HCR should be evaluated through MSE before informing decisions.
-
-Following intensive discussions and compromises, the Commission adopted a revised proposal (COMM13-Prop01_rev5), establishing a one-year TAC of 1.785 Mt for 2025 while reaffirming:
-
-- The importance of completing the MSE and adopting a revised MP and HCR by 2026;
-- The temporary nature of the 2025 deviation;
-- The application of Article 20(5) of the Convention to enable responsive management should the stock decline[^7].
-
-<!-- `(1,419,119-1,135,297)/1,135,297 = 25%` -->
-
-<!-- We note that the  *Trachurus murphyi* undertaken by vessels flagged to Members and Cooperating Non-Contracting Parties (CNCPs) included on the Commission Record of Vessels (CMM 05-2023) in the Convention Area and, in accordance with Article 20(4)(a)(iii) and with the express consent of Chile and Ecuador, to fisheries for *Trachurus murphyi* undertaken by Chile and Ecuador in areas under their national jurisdiction. -->
-
-This episode highlighted both the limitations of static MP rules under changing stock and socioeconomic conditions, and the importance of timely completion of the MSE process to provide more flexible and scientifically robust guidance.
-
-## Footnotes
-
-[^1]: COMM13-Prop01 and COMM13-Prop01_rev5 (Annex 10d)
-[^2]: COMM3-Annex C
-[^3]: SPRFMO Convention, Article 4.3
-[^4]: SC12 Report, Paragraph 136
-[^5]: SC12 Report, Paragraph 137
-[^6]: SC12 Report, Table 37 of Annex 7
-[^7]: SPRFMO Convention, Article 20(5)
-
-## Near term
-
-Participants were encouraged to document their activities during the
-workshop, including the methods explored and tuning targets used. Work
-tasked identified included:
-
--   **All** continue to evaluate MPs to the extent practical ensuring that
-    they can be tuned to achieve a 60% green status and are consistent with the available
-    OM data stream projections.
-    
--   **Jim** evaluated 9 MPs (including `bufferdelta2`, `cpuescore2`,
-    test acoustic, and combinations of CPUE indices with different
-    `delta_TAC` values), all tuned to achieve 60% green status.
-
--   **Jose/Chile** apply shortcut tuning methods to reach similar green
-    zone targets.
-    
-
-This table illustrates how an array of MPs might be evaluated for summarization:
-
-| Year | Method | Metric | Tuning Parameter | Other Parameters | Score Index | Comments |
-|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
-| 2024+ | `buffer.hcr` | depletion | target | bufflow, buffup, limit | `cpuescore3.ind` | Original pkg function |
-| 2024+ | `bufferdelta.hcr` | depletion | width | sloperatio | `cpuescore3.ind` | Modified; not compatible with z-score metrics |
-| 2024+ | `bufferdelta2.hcr` | zscore | width | sloperatio | `cpuescore2.ind` | New; not compatible with depletion |
-| 2024+ | `buffer2.hcr` | zscore | target | width (affects buffer) | `cpuescore2.ind` | Original; adjusted for zscore (limit = -2 SD) |
-    
-## Medium term
-
-The group agreed to continue working on the MSE framework, with a focus
-on the following tasks:
-  -   **Consider how reference set of OMs could be regenerated** conditioned to historical data using MCMC methods.
-  -   **Implement robustness tests** to evaluate how MPs perform under a range of plausible yet uncertain scenarios.
-  -   **Refine MP candidates** using the jmMSE software package, ensuring they are scientifically sound and technically transparent.
-  -   **Document and share** the MSE framework, including model assumptions, data sources, and MP structure.
-  -   **Explore additional diagnostics** and refinements, including new performance metrics that reflect stock status and trends in the final projection years.
-
-# Conclusion
-
-
 # References
 
 ::: {#refs}
@@ -576,17 +646,22 @@ on the following tasks:
 
 # Examples of Shortcut MPs {#sec-shortcut}
 
-This section was compiled by Ignacio Payá and colleagues from Chile. 
-It summarizes an example implementation of "shortcut" management procedures (MPs) that simplify the estimation and harvest control rule (HCR) steps using buffered depletion-based control. 
-It also illustrates how FLR-based tools can be used to define control logic, evaluate HCR targets, 
-and visualize results using the `Slick` (@slick2024) and `mseviz` (@mseviz2022) R packages.
-for performance evaluation. Each section below includes code, explanation, and figures 
-that demonstrate specific aspects of the approach.
+This section was compiled by Ignacio Payá and colleagues from Chile. It
+summarizes an example implementation of "shortcut" management procedures
+(MPs) that simplify the estimation and harvest control rule (HCR) steps
+using buffered depletion-based control. It also illustrates how
+FLR-based tools can be used to define control logic, evaluate HCR
+targets, and visualize results using the `Slick` (@slick2024) and
+`mseviz` (@mseviz2022) R packages. for performance evaluation. Each
+section below includes code, explanation, and figures that demonstrate
+specific aspects of the approach.
 
 ## Shortcut MP Definition {#sec-def}
 
-This section defines the MP structure using `mpCtrl()` with shortcut estimation (`shortcut.sa`),
-a buffer-based HCR, and a split implementation system (ISYS). Deviations are defined using a lognormal AR(1) process.
+This section defines the MP structure using `mpCtrl()` with shortcut
+estimation (`shortcut.sa`), a buffer-based HCR, and a split
+implementation system (ISYS). Deviations are defined using a lognormal
+AR(1) process.
 
 ```{r mp-definition}
 #| eval: false
@@ -617,13 +692,13 @@ ctrl <- mpCtrl(list(
 ))
 ```
 
-
 ### HCR Target Exploration {#sec-hcr}
 
-To evaluate MP performance under various Total Allowable Catch (TAC) values, the 
-control object from \[Section @sec-def] is tested across a set of TAC multipliers. 
-The target range brackets the 2025 CMM level.
-This produces comparative projection plots for four candidate TAC levels (@fig-tac-proj).
+To evaluate MP performance under various Total Allowable Catch (TAC)
+values, the control object from [Section @sec-def] is tested across a
+set of TAC multipliers. The target range brackets the 2025 CMM level.
+This produces comparative projection plots for four candidate TAC levels
+(@fig-tac-proj).
 
 ```{r hcr-targets}
 #| eval: false
@@ -639,22 +714,24 @@ png("images/Projections_Sc_har_Around_TAC2025.png", width=800, height=450)
 dev.off()
 ```
 
+![Projections for TAC 2025 scenarios using buffer
+HCR.](images/Projections_Sc_har_Around_TAC2025.png){#fig-tac-proj
+fig-align="center"}
 
-![Projections for TAC 2025 scenarios using buffer HCR.](images/Projections_Sc_har_Around_TAC2025.png){#fig-tac-proj fig-align="center"}
+Now we test this with a simple limit on the annual change in TAC, which
+is a common requirement in many fisheries management systems. These
+results compare similarly to those without any TAC constraint
+(@fig-targets_lim). A clearer evaluation of these two sets is shown in
+the next section using the `Slick` package.
 
+![Projections for TAC 2025 scenarios using buffer HCR with TAC change
+limit at 15
+percent.](images/Projections_Sc_har_Around_TAC2025_lim.png){#fig-targets_lim
+fig-align="center"}
 
-
-Now we test this with a simple limit on the annual change in TAC, which is a common requirement 
-in many fisheries management systems. These results compare similarly to those without
-any TAC constraint (@fig-targets_lim). A clearer evaluation of these two sets
-is shown in the next section using the `Slick` package.
-
-![Projections for TAC 2025 scenarios using buffer HCR with TAC change limit at 15 percent.](images/Projections_Sc_har_Around_TAC2025_lim.png){#fig-targets_lim fig-align="center"}
-
-
-![Projections for TAC 2025 scenarios using buffer HCR with TAC change limit at 25% (downward) and 15% increases.](images/Projections_Sc_har_Around_TAC2025_lim2515.png){#fig-targets_lim fig-align="center"}
-
-
+![Projections for TAC 2025 scenarios using buffer HCR with TAC change
+limit at 25% (downward) and 15%
+increases.](images/Projections_Sc_har_Around_TAC2025_lim2515.png){fig-align="center"}
 
 ```{r hcr-targets-limits}
 #| echo: true
@@ -679,28 +756,32 @@ dev.off()
 
 ```
 
-
 ### Using openMSE's Slick Output {#sec-slick}
 
-Using the `Slick` package  (@slick2024), performance metrics such as catch, 
-fishing mortality, and spawning biomass can be summarized across operating models and MPs.
-As one illustration of the application, we presents a Kobe-style status time series from `Slick`.
-We compare three shortcut management procedures (MPs)
-all tuned to the 2025 TAC level (1.55 million t) but differing in constraints on
-interannual TAC changes (@fig-slick_kobe_time). The panels from left to right represent: (1) no
+Using the `Slick` package (@slick2024), performance metrics such as
+catch, fishing mortality, and spawning biomass can be summarized across
+operating models and MPs. As one illustration of the application, we
+presents a Kobe-style status time series from `Slick`. We compare three
+shortcut management procedures (MPs) all tuned to the 2025 TAC level
+(1.55 million t) but differing in constraints on interannual TAC changes
+(@fig-slick_kobe_time). The panels from left to right represent: (1) no
 constraint (1.0), (2) symmetric ±15% TAC change limit (1.0_d15), and (3)
-asymmetric −25%/+15% limit (1.0_d2515). Each panel shows the proportion of
-simulations over time falling into the green (safe), yellow (overfished or
-overfishing), and red (overfished and overfishing) zones. While all three MPs
-maintain a majority of simulations in the green zone, applying TAC constraints
-leads to a slight increase in the proportion of years falling into the red
-zone—particularly under the asymmetric constraint. This reflects the trade-off
-where increased catch stability may slightly elevate biological risk under
-certain scenarios. We provide a copy of the slick file on the repository under MS Teams
-at [tbd].
+asymmetric −25%/+15% limit (1.0_d2515). Each panel shows the proportion
+of simulations over time falling into the green (safe), yellow
+(overfished or overfishing), and red (overfished and overfishing) zones.
+While all three MPs maintain a majority of simulations in the green
+zone, applying TAC constraints leads to a slight increase in the
+proportion of years falling into the red zone—particularly under the
+asymmetric constraint. This reflects the trade-off where increased catch
+stability may slightly elevate biological risk under certain scenarios.
+We provide a copy of the slick file on the repository under MS Teams at
+\[tbd\].
 
-
-![Shortcut application tuned to the 2025 TAC (1,552,500 t) but with different constraints on TAC changes. Left most is no constraint, middle is 15% increase and decrease, right-most is 25% decrease and 15% increase.](images/slick_kobe_time.png){#fig-slick_kobe_time fig-align="center"}
+![Shortcut application tuned to the 2025 TAC (1,552,500 t) but with
+different constraints on TAC changes. Left most is no constraint, middle
+is 15% increase and decrease, right-most is 25% decrease and 15%
+increase.](images/slick_kobe_time.png){#fig-slick_kobe_time
+fig-align="center"}
 
 ```{r slick-output}
 #| echo: true
@@ -748,11 +829,11 @@ App(slick = sli)
 saveRDS(sli, file="demo/PayaShortCuts_2.slick")
 ```
 
+### Other tools for viewing performance indicators {#sec-flr}
 
-## Other tools for viewing performance indicators {#sec-flr}
-
-This section summarizes performance using FLR tools from the `mseviz` package (@mseviz2022). 
-Average values are computed for specified periods and used in BRP (Biological Reference Point) and tradeoff plots.
+This section summarizes performance using FLR tools from the `mseviz`
+package (@mseviz2022). Average values are computed for specified periods
+and used in BRP (Biological Reference Point) and tradeoff plots.
 
 ```{r }
 #| eval: false
@@ -835,72 +916,94 @@ plotBPs(perf |>
 dev.off()
 ```
 
-The performance of shortcut management procedures (MPs) over the tuning period (2034–2045) were contrasted as an example. 
-Here, each MP was run with catch "targets" at different level relative to the 2025 TAC (1.5525 million t).
-They ranged from 85% (d00_0.85)  to 125% (d00_1.25), with no constraints on interannual TAC changes. 
-As expected, higher catch targets result in greater average catches (mean(C)), but also 
-increased interannual variability (IAC(C)), as well as higher fishing mortality (F) (@fig-targ_TAC). 
-Conversely, spawning biomass (SB) declines with increasing catch target, suggesting 
-a clear trade-off between yield and stock conservation. While d00_1.0 balances moderate 
-catch with more stable biomass and fishing pressure, higher targets (d00_1.15 
-and d00_1.25) achieve larger catches at the cost of reduced SB and greater 
-volatility—highlighting the importance of considering both yield and stability objectives when selecting candidate MPs.
+The performance of shortcut management procedures (MPs) over the tuning
+period (2034–2045) were contrasted as an example. Here, each MP was run
+with catch "targets" at different level relative to the 2025 TAC (1.5525
+million t). They ranged from 85% (d00_0.85) to 125% (d00_1.25), with no
+constraints on interannual TAC changes. As expected, higher catch
+targets result in greater average catches (mean(C)), but also increased
+interannual variability (IAC(C)), as well as higher fishing mortality
+(F) (@fig-targ_TAC). Conversely, spawning biomass (SB) declines with
+increasing catch target, suggesting a clear trade-off between yield and
+stock conservation. While d00_1.0 balances moderate catch with more
+stable biomass and fishing pressure, higher targets (d00_1.15 and
+d00_1.25) achieve larger catches at the cost of reduced SB and greater
+volatility—highlighting the importance of considering both yield and
+stability objectives when selecting candidate MPs.
 
-We then compared performance of shortcut MPs all tuned to the 2025 TAC target (1.5525 million t), but with 
-different constraints on interannual changes in TAC. These included (as in the previous figure)
-no constraint on TAC changes (d00), a symmetric ±15% constraint (d15), and an asymmetric −25%/+15% constraint (d2515). 
-While mean catch (mean(C)) is similar across all three MPs, the application of TAC 
-constraints notably reduces interannual variability (IAC(C)) compared to the unconstrained case (@fig-deltaTAC). 
-This stability comes with trade-offs—particularly a modest increase in the probability of 
-hitting a predefined TAC floor (P(TAClimit)) for d15 and d2515. Spawning biomass (SB) 
-and fishing mortality (F) remain broadly similar across scenarios, suggesting that 
-moderate TAC constraints can improve catch stability without severely compromising 
-stock status. Overall, the results highlight the stabilizing benefit of delta-TAC constraints, 
-with d15 offering the most consistent balance of catch, stability, and conservation performance.
+We then compared performance of shortcut MPs all tuned to the 2025 TAC
+target (1.5525 million t), but with different constraints on interannual
+changes in TAC. These included (as in the previous figure) no constraint
+on TAC changes (d00), a symmetric ±15% constraint (d15), and an
+asymmetric −25%/+15% constraint (d2515). While mean catch (mean(C)) is
+similar across all three MPs, the application of TAC constraints notably
+reduces interannual variability (IAC(C)) compared to the unconstrained
+case (@fig-deltaTAC). This stability comes with trade-offs—particularly
+a modest increase in the probability of hitting a predefined TAC floor
+(P(TAClimit)) for d15 and d2515. Spawning biomass (SB) and fishing
+mortality (F) remain broadly similar across scenarios, suggesting that
+moderate TAC constraints can improve catch stability without severely
+compromising stock status. Overall, the results highlight the
+stabilizing benefit of delta-TAC constraints, with d15 offering the most
+consistent balance of catch, stability, and conservation performance.
 
-As an alternative, we show figures that highlight short-term (2025–2027) trade-offs among shortcut MPs based on either 
-different TAC targets (@fig-targsTO) or different TAC change constraints (@fig-deltaTO). 
-Increasing the TAC target from 85% to 125% of the 2025 TAC
-results in expected increases in catch, but also in fishing mortality (F) and
-interannual catch variability (IAC(C)), with slight declines in spawning biomass
-(SB). All options show negligible probability of hitting the TAC floor
-(P(TAClimit)). In contrast, comparing MPs with the same TAC
-target (2025 level) but different delta-TAC constraints (@fig-deltaTO). While d00_1.0 provides
-slightly higher short-term catch, it exhibits greater catch variability and a
-marginally higher risk of triggering the TAC limit compared to d15_1.0 and
-d2515_1.0. These results suggest that in the short term, applying TAC
-constraints can enhance stability and reduce the risk of severe TAC cuts, albeit
-in catch—highlighting a management choice between
-maximizing short-term yield and reducing volatility.
+As an alternative, we show figures that highlight short-term (2025–2027)
+trade-offs among shortcut MPs based on either different TAC targets
+(@fig-targsTO) or different TAC change constraints (@fig-deltaTO).
+Increasing the TAC target from 85% to 125% of the 2025 TAC results in
+expected increases in catch, but also in fishing mortality (F) and
+interannual catch variability (IAC(C)), with slight declines in spawning
+biomass (SB). All options show negligible probability of hitting the TAC
+floor (P(TAClimit)). In contrast, comparing MPs with the same TAC target
+(2025 level) but different delta-TAC constraints (@fig-deltaTO). While
+d00_1.0 provides slightly higher short-term catch, it exhibits greater
+catch variability and a marginally higher risk of triggering the TAC
+limit compared to d15_1.0 and d2515_1.0. These results suggest that in
+the short term, applying TAC constraints can enhance stability and
+reduce the risk of severe TAC cuts, albeit in catch—highlighting a
+management choice between maximizing short-term yield and reducing
+volatility.
 
-While the general patterns observed in the short-term persist, the medium-term
-results show reduced separation across MPs in all performance metrics. For
-instance, in the TAC target comparison (top panel), differences in fishing
-mortality (F), interannual catch variability (IAC(C)), and spawning biomass (SB)
-across catch targets narrow considerably. This suggests that the system has
-begun to stabilize, with stock status and catch performance converging even
-under different TAC target levels (@fig-targsTOmed). Similarly, in the delta-TAC constraint
-comparison (@fig-deltaTOmed), the three strategies (d00, d15, d2515) yield almost
-indistinguishable outcomes across all metrics, aside from slightly higher
-uncertainty in the risk of hitting the TAC limit for d15_1.0. This convergence
-indicates that the influence of TAC constraints diminishes as the system
-settles, implying that short-term trade-offs in volatility and yield may be more
-relevant than medium-term differences when selecting among MPs.
+While the general patterns observed in the short-term persist, the
+medium-term results show reduced separation across MPs in all
+performance metrics. For instance, in the TAC target comparison (top
+panel), differences in fishing mortality (F), interannual catch
+variability (IAC(C)), and spawning biomass (SB) across catch targets
+narrow considerably. This suggests that the system has begun to
+stabilize, with stock status and catch performance converging even under
+different TAC target levels (@fig-targsTOmed). Similarly, in the
+delta-TAC constraint comparison (@fig-deltaTOmed), the three strategies
+(d00, d15, d2515) yield almost indistinguishable outcomes across all
+metrics, aside from slightly higher uncertainty in the risk of hitting
+the TAC limit for d15_1.0. This convergence indicates that the influence
+of TAC constraints diminishes as the system settles, implying that
+short-term trade-offs in volatility and yield may be more relevant than
+medium-term differences when selecting among MPs.
 
+![Boxplots for shortcut MP with target catches set to different
+multipliers of the 2025 TAC (e.g., 0.85 is 85% of the 2025 TAC (1.5525
+million t).](images/sc_targ_TAC.png){#fig-targ_TAC fig-align="center"}
 
-![Boxplots for shortcut MP with target catches set to different multipliers of the 2025 TAC (e.g., 0.85 is 85% of the 2025 TAC (1.5525 million t).](images/sc_targ_TAC.png){#fig-targ_TAC fig-align="center"}
+![Boxplots for shortcut MP with target catches set to the 2025 TAC
+(1.5525 million t) and with different constraints on annual TAC
+changes.](images/sc_delta_TAC.png){#fig-deltaTAC fig-align="center"}
 
-![Boxplots for shortcut MP with target catches set to the 2025 TAC (1.5525 million t) and with different constraints on annual TAC changes.](images/sc_delta_TAC.png){#fig-deltaTAC fig-align="center"}
+!["Trade-off plots for short term results from the shortcut method and
+different targets relative to the 2025 TAC (1.5525 million
+t).](images/sc_targs_TO.png){#fig-targsTO fig-align="center"}
 
-!["Trade-off plots for short term results from the shortcut method and different  targets relative to the 2025 TAC (1.5525 million t).](images/sc_targs_TO.png){#fig-targsTO  fig-align="center"}
+!["Trade-off plots for short term results from the shortcut method and
+different constraints on annual TAC
+changes).](images/sc_delta_TO.png){#fig-deltaTO fig-align="center"}
 
-!["Trade-off plots for short term results from the shortcut method and different  constraints on annual TAC changes).](images/sc_delta_TO.png){#fig-deltaTO  fig-align="center"}
+!["Trade-off plots for medium term results from the shortcut method and
+different targets relative to the 2025 TAC (1.5525 million
+t).](images/sc_targs_TO_med.png){#fig-targsTOmed fig-align="center"}
 
-!["Trade-off plots for medium term results from the shortcut method and different  targets relative to the 2025 TAC (1.5525 million t).](images/sc_targs_TO_med.png){#fig-targsTOmed  fig-align="center"}
-
-!["Trade-off plots for medium  term results from the shortcut method and different  constraints on annual TAC changes).](images/sc_delta_TO_med.png){#fig-deltaTOmed  fig-align="center"}
-
-
+!["Trade-off plots for medium term results from the shortcut method and
+different constraints on annual TAC
+changes).](images/sc_delta_TO_med.png){#fig-deltaTOmed
+fig-align="center"}
 
 ```{r plot-tos-short}
 #| eval: false
@@ -984,9 +1087,11 @@ plotTOs(perf |>
 dev.off()
 ```
 
-These diagnostics provide visual summaries of CMP performance across time horizons.
-
-## Summary 
-This appendix presents a full example of how shortcut methods can be configured and evaluated in the jmMSE framework. The use of buffered harvest control, lognormal deviations, and simplified estimation methods make these examples especially useful for scoping and tuning phases of MSE development. Future iterations could generalize the estimation block or integrate OpenMSE for better interoperability.
-
-
+These diagnostics provide visual summaries of CMP performance across
+time horizons.
+This addendum presents a full example of how shortcut methods can be
+configured and evaluated in the jmMSE framework. The use of buffered
+harvest control, lognormal deviations, and simplified estimation methods
+make these examples especially useful for scoping and tuning phases of
+MSE development. Future iterations could generalize the estimation block
+or integrate OpenMSE for better interoperability.

@@ -85,6 +85,8 @@ format:
   html:
     # title-block-banner: true   # shows title & logo at the top
     # title-block-style: none    # disables default banner styling
+    number-sections: true
+    number-depth: 3
     lightbox: true
     html-math-method:
       method: mathjax
@@ -119,6 +121,8 @@ format:
     papersize: letter
     header-includes:
       - \counterwithout{figure}{chapter}
+    number-sections: true
+    number-depth: 3
 
 date: now
 date-format: "YYYY-MM-DD"

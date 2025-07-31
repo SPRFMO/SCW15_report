@@ -5,14 +5,18 @@ format:
     embed-resources: true
 # Appendix E. Notes on the Jack Mackerel MSE Framework {#app-notes .unnumbered}
 ---
-
-
-
-This document summarizes the structure and behavior of key objects used
+# Overview
+This document is a collection of notes on the structure and behavior of key objects used
 in the **jmMSE** Management Strategy Evaluation (MSE) framework for
 SPRFMO Jack Mackerel. It documents the modeling components (`h1`, `om`,
 `perf`), performance calculations, and the use of `getSlick()` and
 `FLslick()` to generate evaluation plots.
+
+This modular framework allows for flexible and transparent testing of
+MPs within the MSE simulation, including full customization of
+estimation, control rules, and implementation behavior. This notebook
+supports the JM MSE development process and is intended for use during
+scenario comparison, workshop reporting, and trade-off evaluation.
 
 ## Defining Management Procedures using `mpCtrl` and `mseCtrl`
 
@@ -503,7 +507,7 @@ output <- bufferdelta.hcr(result$stk, result$ind, args = args, tracking = result
 | `ctrl` | A list of control parameters for MPs (e.g., estimation methods, tuning devs) |
 | `condition` | *Not found in current project files; possibly a misidentified object* |
 
-## Helper Functions to Plot Results
+### Helper Functions to Plot Results
 
 ```{r}
 #| eval: false
@@ -512,99 +516,8 @@ plot_slick_spider(sli, om_idx = 1, mp_idx = 2)
 plot_slick_tradeoff(sli, stat = "PSBMSY")
 ```
 
-## Defining Management Procedures using `mpCtrl` and `mseCtrl`
 
-In the `mse` package, Management Procedures (MPs) are modularly
-constructed using the `mpCtrl` class, which bundles together component
-controls (`mseCtrl`) for estimation, decision-making, and
-implementation.
-
-### Structure of `mpCtrl`
-
-```{r}
-#| label: mpCtrl_structure
-#| echo: false
-#| eval: false
-source("config.R")
-ctrl <- mpCtrl(list(
-  est = mseCtrl(method = shortcut.sa, args = list(
-    metric = "depletion",
-    devs = metdevs,
-    B0 = refpts(om)$SB0
-  )),
-  hcr = mseCtrl(method = buffer.hcr, args = list(
-    target  = 1000,
-    bufflow = 0.30,
-    buffupp = 0.50,
-    lim     = 0.10,
-    min     = 0,
-    metric  = "depletion"
-  )),
-  isys = mseCtrl(method = split.is, args = list(
-    split = catch_props(om)$last5
-  ))
-))
-```
-
-### Components and Options
-
-| Component | Description | Example `method` | Typical `args` |
-|------------------|------------------|------------------|------------------|
-| `est` | Estimator for stock status | `perfect.sa`, `shortcut.sa` | `metric`, `B0`, `devs`, `years` |
-| `hcr` | Harvest Control Rule | `buffer.hcr`, `hockeystick.hcr`, `trend.hcr` | `target`, `lim`, `trigger`, `metric`, `buffer` |
-| `phcr` | Parametrization of HCR (optional) | `parametric.hcr`, etc. | Custom parameters |
-| `isys` | Implementation system (e.g., allocation strategy) | `split.is` | `split = catch_props(...)`, `noise`, `bias` |
-| `tm` | Technical measures (e.g., size limits, gear rules) | -- | Optional, rarely used in CJM MSE setup |
-
-### Summary of `mseCtrl`
-
-An `mseCtrl` object specifies **how a module runs**:
-
--   `method`: a function to apply (e.g., `shortcut.sa`)
--   `args`: list of arguments passed to the method
-
-#### Example
-
-```{r}
-#| eval: false
-mseCtrl(
-  method = buffer.hcr,
-  args = list(
-    target  = 1000,
-    bufflow = 0.30,
-    buffupp = 0.50,
-    lim     = 0.10,
-    min     = 0,
-    metric  = "depletion"
-  )
-)
-```
-
-### Accessors and Replacements
-
-You can modify or retrieve components using:
-
-```{r}
-#| eval: false
-method(ctrl@hcr)
-args(ctrl@hcr)$target <- 1200
-```
-
-Or, using provided accessors:
-
-```{r}
-#| eval: false
-hcr(ctrl) <- mseCtrl(method = new.hcr, args = list(...))
-args(ctrl, "hcr")$target <- 1100
-```
-
-This modular framework allows for flexible and transparent testing of
-MPs within the MSE simulation, including full customization of
-estimation, control rules, and implementation behavior. This notebook
-supports the JM MSE development process and is intended for use during
-scenario comparison, workshop reporting, and trade-off evaluation.
-
-## Slick Object Structure
+### Slick Object Structure
 
 The `Slick` object is the core summary container created by the
 `getSlick()` and `FLslick()` functions. It contains performance data
@@ -623,7 +536,7 @@ Procedures (MPs) and Operating Models (OMs).
 
 ------------------------------------------------------------------------
 
-## Creating and Visualizing a Slick Object
+### Creating and Visualizing a Slick Object
 
 ```{r}
 #| eval: false
@@ -638,23 +551,3 @@ perf <- readPerformance("demo/performance.dat.gz")
 sli <- getSlick(perf[grep("tune", run)], omperf, kobeyrs = 2034:2042)
 ```
 
-------------------------------------------------------------------------
-
-## Optional: Shorten MP Labels for Plotting
-
-```{r}
-#| eval: false
-shorten_mp <- function(mpnames) {
-  gsub("h1_1.07_", "", mpnames) |>
-    gsub("cpue2", "C2", .) |>
-    gsub("cpue36", "C36", .) |>
-    gsub("cpue3", "C3", .) |>
-    gsub("scbad", "SCB", .) |>
-    gsub("scgood", "SCG", .) |>
-    gsub("scmedium", "SCM", .) |>
-    gsub("buffer", "BUF", .) |>
-    gsub("hcr_target_", "HCR_T", .) |>
-    gsub("tune", "T", .)
-}
-perf[, mp := paste0("H1_", shorten_mp(mp))]
-```
