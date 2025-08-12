@@ -503,23 +503,22 @@ external developers) may be available but would be contingent on:
 
 -   Collaboration with the technical team.
 
--   Openness to using **openMSE**.
+-   Receptiveness to using **openMSE**.
 
 -   Clear timelines and deliverables.
 
-Proposed deliverables and deadlines include:
+An initial set of deliverables that have been completed include:
 
--   **Reference OMs** (no multistock): End of July
+- **Reference OMs** (no multistock): End of July 
 
--   **Robustness OMs** (no multistock): End of August
+- **Robustness OMs** (no multistock): End of August progress)*  
 
--   **Shortcut calibration** to the JJM assessment: End of August
+- **Shortcut calibration** to the JJM assessment: End of August 
 
--   **Range of shortcut MPs** run for all reference OMs: End of July
+- **Range of shortcut MPs** run for all reference OMs: End of July 
 
-Planned products:
 
--   Technical documentation and reports:
+- **Technical documentation and reports**:
 
     -   Draft Technical Summary Document (TSD) by end of July.
 
@@ -527,7 +526,7 @@ Planned products:
 
         -   Shortcut calibration to JJM
 
-        -   Reference set OM results for MP archetypes
+        -   Reference set OM results for MP archetypes *(pending)*
 
         -   Robustness OM results
 
@@ -535,7 +534,7 @@ Planned products:
 
     -   Slick MSE results summary.
 
-    -   TSD v1 by end of September.
+
 
 ### Near term tasks
 
@@ -556,14 +555,66 @@ tasked identified included:
 
 This table illustrates how an array of MPs might be evaluated for
 summarization:
+ 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| error: false
+#| results: 'asis'
+#| fig.cap: "Summary of MPs evaluated during the workshop, including tuning targets and performance metrics."
+library(gt)
+library(dplyr)
 
-| Year | Method | Metric | Tuning Parameter | Other Parameters | Score Index | Comments |
-|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
-| 2024+ | `buffer.hcr` | depletion | target | bufflow, buffup, limit | `cpuescore3.ind` | Original pkg function |
-| 2024+ | `bufferdelta.hcr` | depletion | width | sloperatio | `cpuescore3.ind` | Modified; not compatible with z-score metrics |
-| 2024+ | `bufferdelta2.hcr` | zscore | width | sloperatio | `cpuescore2.ind` | New; not compatible with depletion |
-| 2024+ | `buffer2.hcr` | zscore | target | width (affects buffer) | `cpuescore2.ind` | Original; adjusted for zscore (limit = -2 SD) |
+# Data frame
+df <- tribble(
+  ~Year,   ~Method,             ~Metric,     ~`Tuning Parameter`, ~`Other Parameters`, ~`Score Index`,       ~Comments,
+  "2024+", "buffer.hcr",        "depletion", "target",            "bufflow, buffup, limit", "cpuescore3.ind", "Original pkg function",
+  "2024+", "bufferdelta.hcr",   "depletion", "width",             "sloperatio",           "cpuescore3.ind", "Modified; not compatible with z-score metrics",
+  "2024+", "bufferdelta2.hcr",  "zscore",    "width",             "sloperatio",           "cpuescore2.ind", "New; not compatible with depletion",
+  "2024+", "buffer2.hcr",       "zscore",    "target",            "width (affects buffer)", "cpuescore2.ind", "Original; adjusted for zscore (limit = -2 SD)"
+)
 
+# gt table
+df %>%
+  gt() %>%
+  tab_header(
+    title = md("**Harvest Control Rule Methods Summary**"),
+    subtitle = "Comparison of methods, tuning, and compatibility"
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = c(Year, Metric, `Tuning Parameter`, `Other Parameters`, `Score Index`)
+  ) %>%
+  cols_width(
+    Year ~ px(70),
+    Method ~ px(150),
+    Metric ~ px(100),
+    `Tuning Parameter` ~ px(130),
+    `Other Parameters` ~ px(180),
+    `Score Index` ~ px(150),
+    Comments ~ px(300)
+  ) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels(everything())
+  ) %>%
+  tab_options(
+    table.font.size = px(13),
+    table.border.top.width = px(2),
+    table.border.bottom.width = px(2),
+    data_row.padding = px(6)
+  ) %>%
+  fmt_markdown(columns = everything())
+# 
+# | Year | Method | Metric | Tuning Parameter | Other Parameters | Score Index | Comments |
+# |-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+# | 2024+ | `buffer.hcr` | depletion | target | bufflow, buffup, limit | `cpuescore3.ind` | Original pkg function |
+# | 2024+ | `bufferdelta.hcr` | depletion | width | sloperatio | `cpuescore3.ind` | Modified; not compatible with z-score metrics |
+# | 2024+ | `bufferdelta2.hcr` | zscore | width | sloperatio | `cpuescore2.ind` | New; not compatible with depletion |
+# | 2024+ | `buffer2.hcr` | zscore | target | width (affects buffer) | `cpuescore2.ind` | Original; adjusted for zscore (limit = -2 SD) |
+
+```
 
 The SC Chair, Ricardo developed some enhancements to the jmMSE demo 
 framework after the workshop. These introduce greater flexibility
