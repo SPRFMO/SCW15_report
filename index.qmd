@@ -27,7 +27,7 @@ editor:
     wrap: 72
 ---
 
-# Executive summary
+# Summary
 
 The Jack Mackerel Management Strategy Evaluation (MSE) Technical
 Workshop brought together scientists, technical experts, and external
