@@ -1,5 +1,5 @@
 ---
-title: "Report of the MSE workshop, July 14-18, 2025"
+title: "Report of the Management Strategy Evaluation (MSE) workshop, July 14-18, 2025"
 bibliography: references.bib  
 format:
   html:
@@ -31,10 +31,9 @@ editor:
 
 The Jack Mackerel Management Strategy Evaluation (MSE) Technical
 Workshop brought together scientists, technical experts, and external
-reviewers to review recent progress and refine the MSE framework being
-developed under SPRFMO. The primary goal of the workshop was to ensure
-that the modeling framework and management procedures (MPs) are
-scientifically sound, technically transparent, and aligned with
+reviewers to assess recent progress and refine the MSE framework being
+developed under South Pacific Regional Fisheries Management Organisation (SPRFMO). The primary goal of the workshop was to ensure that the modeling framework and management procedures (Management Procedures (MPs)) are
+scientifically sound, technically robust and transparent, and aligned with
 management priorities as outlined by the Commission (e.g.,
 @sprfmo2025jmwgmse.
 
@@ -63,14 +62,13 @@ management priorities as outlined by the Commission (e.g.,
     -   TAC adjusted incrementally from the previous year based on index
         signals.
 
-    We noted that the high current stock status (well within the “green”
-    zone) tended to increase catch levels when tuning to achieve a
+    We noted that the high current stock status (well within the Commission-defined “green zone” (indicating stock levels at or above target biomass)) tended to increase catch levels when tuning to achieve a
     desired P(Green). This can result in declining stock trends later in
     the projection period, even when the short-term performance criteria
     are met.
 
 4.  **Recommendations and Refinements**\
-    The group recommended additional diagnostics and refinements,
+    The participants recommended additional diagnostics and refinements,
     including:
 
     -   Adding plots of how index trajectories relate to TACs.
@@ -84,7 +82,7 @@ management priorities as outlined by the Commission (e.g.,
         CPUE is used as an input.
 
 5.  **Documentation and Transparency**\
-    The group emphasized the importance of transparency in documenting
+    The participants emphasized the importance of transparency in documenting
     model assumptions, data sources, and MP structure. The group agreed
     on priorities for improving documentation and sharing annotated
     examples of MP behavior.
@@ -599,7 +597,7 @@ regenerated** conditioned to historical data using MCMC methods. -
 **Implement robustness tests** to evaluate how MPs perform under a range
 of plausible yet uncertain scenarios. - **Refine MP candidates** using
 the jmMSE software package, ensuring they are scientifically sound and
-technically transparent. - **Document and share** the MSE framework,
+technically robust and transparent. - **Document and share** the MSE framework,
 including model assumptions, data sources, and MP structure. - **Explore
 additional diagnostics** and refinements, including new performance
 metrics that reflect stock status and trends in the final projection
@@ -883,7 +881,7 @@ plotBPs(perf |>
             "d00_1.0", 
             "d15_1.0", 
             "d2515_1.0"
-            )) , statistics=c(
+            )), statistics=c(
             "C",
             "IACC",
             "F",
@@ -903,7 +901,7 @@ plotBPs(perf |>
             "d00_1.0", 
             "d00_1.15", 
             "d00_1.25" 
-            )) , statistics=c(
+            )), statistics=c(
             "C",
             "IACC",
             "F",
@@ -1015,7 +1013,7 @@ plotTOs(perf |>
             "d00_1.0", 
             "d15_1.0", 
             "d2515_1.0"
-            )) , x="C",
+            )), x="C",
         y=c(
             "IACC",
             "F",
@@ -1035,7 +1033,7 @@ plotTOs(perf |>
             "d00_1.0", 
             "d00_1.15", 
             "d00_1.25" 
-            )) , x="C",
+            )), x="C",
         y=c(
             "IACC",
             "F",
@@ -1054,7 +1052,7 @@ plotTOs(perf |>
             "d00_1.0", 
             "d15_1.0", 
             "d2515_1.0"
-            )) , x="C",
+            )), x="C",
         y=c(
             "IACC",
             "F",
@@ -1074,7 +1072,7 @@ plotTOs(perf |>
             "d00_1.0", 
             "d00_1.15", 
             "d00_1.25" 
-            )) , x="C",
+            )), x="C",
         y=c(
             "IACC",
             "F",
@@ -1095,3 +1093,4 @@ harvest control, lognormal deviations, and simplified estimation methods
 make these examples especially useful for scoping and tuning phases of
 MSE development. Future iterations could generalize the estimation block
 or integrate OpenMSE for better interoperability.
+
