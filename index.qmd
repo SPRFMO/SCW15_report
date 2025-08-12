@@ -643,14 +643,21 @@ required further investigation and resolution in collaboration with the develope
 ### Medium term tasks
 
 The group agreed to continue working on the MSE framework, with a focus
-on the following tasks: - **Consider how reference set of OMs could be
-regenerated** conditioned to historical data using MCMC methods. -
-**Implement robustness tests** to evaluate how MPs perform under a range
-of plausible yet uncertain scenarios. - **Refine MP candidates** using
-the jmMSE software package, ensuring they are scientifically sound and
-technically robust and transparent. - **Document and share** the MSE framework,
-including model assumptions, data sources, and MP structure. - **Explore
-additional diagnostics** and refinements, including new performance
+on the following tasks: 
+
+  - **Consider how reference set of OMs could be
+regenerated** conditioned to historical data using MCMC methods. 
+
+  - **Implement robustness tests** to evaluate how MPs perform under a range
+of plausible yet uncertain scenarios. 
+
+  - **Refine MP candidates** using the jmMSE software package, ensuring they are scientifically sound and
+technically robust and transparent. 
+
+  - **Document and share** the MSE framework,
+including model assumptions, data sources, and MP structure. 
+
+  - **Explore additional diagnostics** and refinements, including new performance
 metrics that reflect stock status and trends in the final projection
 years.
 
