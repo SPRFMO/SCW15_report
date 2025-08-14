@@ -35,7 +35,13 @@ reviewers to assess recent progress and refine the MSE framework being
 developed under South Pacific Regional Fisheries Management Organisation (SPRFMO). The primary goal of the workshop was to ensure that the modeling framework and management procedures (Management Procedures (MPs)) are
 scientifically sound, technically robust and transparent, and aligned with
 management priorities as outlined by the Commission (e.g.,
-@sprfmo2025jmwgmse.
+@sprfmo2025jmwgmse. The workshop was successful in testing the framework, 
+it resulted in improved understanding of scientists in its 
+functioning and ability to test alternative MPs. Discussions during 
+the workshop contributed to small changes made in the conditioning 
+of the Operating Models (OMs) to improve the robustness of the results. 
+Finally, the framework and preliminary results were accepted by the group as 
+the basis for recommendations to the Science Committee. 
 
 ### Key Outcomes and Advancements
 
@@ -46,9 +52,18 @@ management priorities as outlined by the Commission (e.g.,
     historical data using MCMC, an efficient MP tuning algorithm, and
     tools for visualizing and comparing results.
 
-2.  **Robustness Testing**\
+2.  **MSE and OM fine-tuning**\
+    The workshop focused on refining the operating models (OMs) to
+    ensure they accurately represent the jack mackerel stock dynamics and
+    future behaviour. Participants discussed and implemented changes to the OM structure,
+    including adjustments to transitions to recruitment dynamics, and 
+    selectivity patterns, These refinements were aimed at improving the
+    realism of the OMs and their ability to simulate plausible future
+    scenarios.
+
+3.  **Robustness Testing**\
     The workshop clarified the role and scope of robustness tests. These
-    tests are intended to explore how CMPs perform under a range of
+    tests are intended to explore how candidate MPs perform under a range of
     plausible yet uncertain scenarios rather than represent definitive
     alternative models. Scenarios reflecting changes in recruitment,
     spatial availability, environmental regime shifts (e.g., El Niño),
@@ -58,14 +73,16 @@ management priorities as outlined by the Commission (e.g.,
     Empirical MPs based on one or more indicators were evaluated, with
     focus on two formulations:
 
-    -   TAC as a product of a target and a multiplier from an index.
+    -   TAC as a product of a target and a multiplier from an index (index (e.g. a commercial CPUE).
     -   TAC adjusted incrementally from the previous year based on index
         signals.
 
-    We noted that the high current stock status (well within the Commission-defined “green zone” (indicating stock levels at or above target biomass)) tended to increase catch levels when tuning to achieve a
-    desired P(Green). This can result in declining stock trends later in
-    the projection period, even when the short-term performance criteria
-    are met.
+We noted that the high current stock status (well within the Commission-defined “green zone” (indicating stock levels at or above target biomass)) tended to increase catch levels when tuning to achieve a desired probability to remain in the green zone (this probability is set to 60% by the Commission). This can result in declining stock trends later in the projection period, even when the short-term performance criteria are met, since current probability that the stock is in the green zone is well above this 60% target.
+
+MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the JMWG for advisory purposes, were used to tune MPs as well. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts showed …..
+
+HCR evaluation included limitation on year-to-year TAC changes as well as the option to bank / borrow quota from one year to the next. Results showed that ….
+
 
 4.  **Recommendations and Refinements**\
     The participants recommended additional diagnostics and refinements,
@@ -95,82 +112,82 @@ management priorities as outlined by the Commission (e.g.,
     and exploration of reference points and evaluation criteria beyond
     the green zone probability.
     
-# Background on the 2025 Commission meeting proposal
+<!-- # Background on the 2025 Commission meeting proposal -->
 
-During the 2025 Commission meeting (COMM13), Chile proposed a deviation
-from the established Management Procedure (MP) guidance by recommending
-a Total Allowable Catch (TAC) for *Trachurus murphyi* of 1.785 million
-tonnes for 2025[^1]. This proposal exceeded the 15% year-on-year TAC
-change limit adopted by the Commission as part of its management
-framework[^2]. Chile based its proposal on Article 4.3 of the
-Convention, asserting the need to consider measures by coastal states
-and highlighting that the stock had remained above MSY reference levels
-for over five consecutive years[^3].
+<!-- During the 2025 Commission meeting (COMM13), Chile proposed a deviation -->
+<!-- from the established Management Procedure (MP) guidance by recommending -->
+<!-- a Total Allowable Catch (TAC) for *Trachurus murphyi* of 1.785 million -->
+<!-- tonnes for 2025[^1]. This proposal exceeded the 15% year-on-year TAC -->
+<!-- change limit adopted by the Commission as part of its management -->
+<!-- framework[^2]. Chile based its proposal on Article 4.3 of the -->
+<!-- Convention, asserting the need to consider measures by coastal states -->
+<!-- and highlighting that the stock had remained above MSY reference levels -->
+<!-- for over five consecutive years[^3]. -->
 
-[^1]: COMM13-Prop01 and COMM13-Prop01_rev5 (Annex 10d)
+<!-- [^1]: COMM13-Prop01 and COMM13-Prop01_rev5 (Annex 10d) -->
 
-[^2]: COMM3-Annex C
+<!-- [^2]: COMM3-Annex C -->
 
-[^3]: SPRFMO Convention, Article 4.3
+<!-- [^3]: SPRFMO Convention, Article 4.3 -->
 
-Chile also cited Scientific Committee (SC) analysis, particularly
-paragraph 136 of the SC12 Report, which indicated that the stock was in
-Tier 3 of the adopted Harvest Control Rule (HCR), theoretically allowing
-for a much higher TAC (up to 4.997 Mt) if the full HCR were applied[^4].
-However, as per the Commission's directive to the SC (COMM3-Annex C),
-catch advice was constrained to not exceed a 15% increase, consistent
-with the MP in place[^5].
+<!-- Chile also cited Scientific Committee (SC) analysis, particularly -->
+<!-- paragraph 136 of the SC12 Report, which indicated that the stock was in -->
+<!-- Tier 3 of the adopted Harvest Control Rule (HCR), theoretically allowing -->
+<!-- for a much higher TAC (up to 4.997 Mt) if the full HCR were applied[^4]. -->
+<!-- However, as per the Commission's directive to the SC (COMM3-Annex C), -->
+<!-- catch advice was constrained to not exceed a 15% increase, consistent -->
+<!-- with the MP in place[^5]. -->
 
-[^4]: SC12 Report, Paragraph 136
+<!-- [^4]: SC12 Report, Paragraph 136 -->
 
-[^5]: COMM3-Annex C
+<!-- [^5]: COMM3-Annex C -->
 
-The Scientific Committee Chair emphasized in plenary that the SC's
-advice adhered to the current MP, limiting TAC changes to ±15% to
-account for uncertainties, including potential model misspecification.
-Paragraphs 136 and 137 of the SC12 report note that this constraint was
-not intended to account for rebuilding potential, but rather to ensure
-precautionary stability and reduce the risk of large interannual TAC
-fluctuations[^6].
+<!-- The Scientific Committee Chair emphasized in plenary that the SC's -->
+<!-- advice adhered to the current MP, limiting TAC changes to ±15% to -->
+<!-- account for uncertainties, including potential model misspecification. -->
+<!-- Paragraphs 136 and 137 of the SC12 report note that this constraint was -->
+<!-- not intended to account for rebuilding potential, but rather to ensure -->
+<!-- precautionary stability and reduce the risk of large interannual TAC -->
+<!-- fluctuations[^6]. -->
 
-[^6]: SC12 Report, Paragraph 137
+<!-- [^6]: SC12 Report, Paragraph 137 -->
 
-Chile revised its proposal multiple times (COMM13-Prop01_rev1 through
-rev5) to address Member concerns, including scientific justification,
-process adherence, and future management stability. Nevertheless, many
-Members expressed concern that implementing a TAC increase beyond 15%
-ahead of finalizing the MSE would undermine the credibility of the HCR
-framework and create challenges for future rule-based decisions.
+<!-- Chile revised its proposal multiple times (COMM13-Prop01_rev1 through -->
+<!-- rev5) to address Member concerns, including scientific justification, -->
+<!-- process adherence, and future management stability. Nevertheless, many -->
+<!-- Members expressed concern that implementing a TAC increase beyond 15% -->
+<!-- ahead of finalizing the MSE would undermine the credibility of the HCR -->
+<!-- framework and create challenges for future rule-based decisions. -->
 
-Chile also referred to Table 37 of Annex 7 of the SC12 report, which
-showed that biomass remained above target levels under various fishing
-scenarios. However, the SC Chair cautioned that these projections were
-illustrative only and not intended for management advice[^7]. The SC
-further stressed that alternative scenarios outside the adopted HCR
-should be evaluated through MSE before informing decisions.
+<!-- Chile also referred to Table 37 of Annex 7 of the SC12 report, which -->
+<!-- showed that biomass remained above target levels under various fishing -->
+<!-- scenarios. However, the SC Chair cautioned that these projections were -->
+<!-- illustrative only and not intended for management advice[^7]. The SC -->
+<!-- further stressed that alternative scenarios outside the adopted HCR -->
+<!-- should be evaluated through MSE before informing decisions. -->
 
-[^7]: SC12 Report, Table 37 of Annex 7
+<!-- [^7]: SC12 Report, Table 37 of Annex 7 -->
 
-Following intensive discussions and compromises, the Commission adopted
-a revised proposal (COMM13-Prop01_rev5), establishing a one-year TAC of
-1.785 Mt for 2025 while reaffirming:
+<!-- Following intensive discussions and compromises, the Commission adopted -->
+<!-- a revised proposal (COMM13-Prop01_rev6), establishing a one-year TAC of -->
+<!-- 1.552 Mt for 2025 while reaffirming: -->
 
--   The importance of completing the MSE and adopting a revised MP and
-    HCR by 2026;
--   The temporary nature of the 2025 deviation;
--   The application of Article 20(5) of the Convention to enable
-    responsive management should the stock decline[^8].
+<!-- -   The importance of completing the MSE and adopting a revised MP and -->
+<!--     HCR by 2026; -->
+<!-- -   The temporary nature of the 2025 deviation; -->
+<!-- -   The application of Article 20(5) of the Convention to enable -->
+<!--     responsive management should the stock decline[^8]. -->
 
-[^8]: SPRFMO Convention, Article 20(5)
+<!-- [^8]: SPRFMO Convention, Article 20(5) -->
 
-<!-- `(1,419,119-1,135,297)/1,135,297 = 25%` -->
+<!-- <!-- `(1,419,119-1,135,297)/1,135,297 = 25%` --> -->
 
-<!-- We note that the  *Trachurus murphyi* undertaken by vessels flagged to Members and Cooperating Non-Contracting Parties (CNCPs) included on the Commission Record of Vessels (CMM 05-2023) in the Convention Area and, in accordance with Article 20(4)(a)(iii) and with the express consent of Chile and Ecuador, to fisheries for *Trachurus murphyi* undertaken by Chile and Ecuador in areas under their national jurisdiction. -->
+<!-- <!-- We note that the  *Trachurus murphyi* undertaken by vessels flagged to Members and Cooperating Non-Contracting Parties (CNCPs) included on the Commission Record of Vessels (CMM 05-2023) in the Convention Area and, in accordance with Article 20(4)(a)(iii) and with the express consent of Chile and Ecuador, to fisheries for *Trachurus murphyi* undertaken by Chile and Ecuador in areas under their national jurisdiction. --> -->
 
-This episode highlighted both the limitations of static MP rules under
-changing stock and socioeconomic conditions, and the importance of
-timely completion of the MSE process to provide more flexible and
-scientifically robust guidance.
+<!-- This episode highlighted both the limitations of static MP rules under -->
+<!-- changing stock and socioeconomic conditions, and the importance of -->
+<!-- timely completion of the MSE process to provide more flexible and -->
+<!-- scientifically robust guidance. -->
 
 
 # Workshop introduction
@@ -262,28 +279,76 @@ rsvg_png(svg_file, png_file)
 
 By way of review, we provide a general outline for the workflow for
 defining and evaluating Management Procedures (MPs). We divided the
-process into three main stages (@fig-mp_flow).
+process into three main stages noting that in stage 1, a 
+key activity is to "tune" MPs towards a common goal (@fig-mp_flow). Here
+that goal (based on the questionaire distributed to members durin COMM13) was to 
+achieve a 60% probability of remaining in the "green zone" (i.e., above the $B_{MSY}$
+reference point) in the final years of the projection period. 
 
 ![Workflow for evaluating and selecting candidate management procedures
 (MPs).](images/mp_flow.png){#fig-mp_flow fig-align="center"}
 
 The workshop participants recognized that all of the pieces for this
-exercise were available and implemented. However, the group struggled
-with getting the candidate MPs defined relative to available indices
-("stage 1" in the diagram).
+exercise were available and implemented. However, the group encountered 
+difficulties ascertaining how the TACs related to the empirical MPs that
+were being tested. 
 
 The appendices provide the [participants](doc/App_A.qmd), the
 [agenda](doc/App_B.qmd), and the daily summary activities in the
 workshop [minutes](doc/App_C.qmd). A summary review written by the
 external experts is also [provided here](doc/App_D.qmd).
 
-The following sections detail the discussion on how best to incorporate
+The following sections first review the OM and some results from applying existing
+and refined MPs.  We follow this with 
+the discussion on how best to incorporate
 some environmental effects for projecting from the operating model.
 Specifically, we considered how to account for the effects of El Niño on
-recruitment and catchability/availability. We follow this with a
-sections reviewing the OM and then some results from applying existing
-and refined MPs. We conclude with a set of recommendations for the SC to
-consider.
+recruitment and catchability/availability. 
+We conclude with a set of recommendations for the SC to consider.
+
+
+# Review of the Operating Model specifications
+
+The workshop reviewed the current specifications of the OMs. In
+particular, the assumptions for the reference point calculations were
+discusssed and contrasted with the 2024 assessment results and reports
+(@sprfmo2024annex7). Due to the terminal (2024) estimates of fisheries
+selectivities, the assessment report had anomalously high values for
+$F_{MSY}$
+
+While the 2024 stock assessment produced high estimates of potential
+catch under the third tier of the harvest control rule—exceeding 4,900
+kt based on $F_{MSY}$—this result was considered unrealistic due to
+likely upward bias in $F_{{MSY}}$ estimates caused by strong selection
+on older fish. As a result, the Scientific Committee recommended
+constraining the 2025 TAC to be at or below 1,428 kt, representing only
+a 15% increase from 2024 levels and aligned with the Commission’s
+guidance. In developing the OM, reference points such as $F_{{MSY}}$
+were instead based on longer-term averages in fishery selectivity
+estimates to avoid the influence of
+short-term variability or cohort effects, ensuring more stable and
+precautionary management advice consistent with the MSE framework
+(@fig-ref_pts).
+
+![Distribution of reference points from the operating model accepted by
+the workshop.](images/ref_pts.png){#fig-ref_pts}
+
+Several issues were identified with the current stock assessment that
+warrant further attention ahead of the next benchmark. Key among them
+are uncertainties in catch-at-age data stemming from differences in age
+determination methods across laboratories, as well as assumptions about
+mean body weight at age. The Scientific Committee emphasized the need
+for standardizing CPUE indices and improving data collection protocols,
+particularly regarding fleet-specific efficiency changes. Sensitivities
+to early age composition data—especially from the pre-1990 period—remain
+unresolved, with residual patterns noted for the North Chilean fleet. In
+addition, assumptions underlying selectivity and recruitment regimes
+were highlighted as critical sources of uncertainty, with substantial
+influence on reference points and management advice. Finally, the
+participants underscored the importance of continued evaluation of
+single-stock versus two-stock model structures using simulation and MSE
+tools.
+
 
 # Simulating El Niño effects in the Operating Model
 
@@ -291,9 +356,10 @@ To incorporate climate-driven variability into the Operating Model (OM)
 projections, we defined a scenario simulating El Niño–like events every
 five years beginning in 2030. These events affect primarily recruitment
 and distribution options. Based on the work of Iago and available
-literature, we proposed biological and fishery processes that may relate
-to El Niño conditions. The group discussed these and noted that they
-could be evaluated in the next round of stock assessment benchmark and
+literature, we proposed an initial set of biological and fishery processes that most
+likely relate
+to El Niño conditions. The group discussed these and noted that others may be 
+best considered in the next round of stock assessment benchmark and
 for future MSE work.
 
 The table below summarizes the proposed effects of simulated El Niño
@@ -349,9 +415,12 @@ directions, and justification.
 
 ## Estimating Relative Availability from Catch Proportions
 
-Taking an assumption that over a recent period that changes in a
-smoothed proportion of catch by coastal and offshore areas roughly
-relates to the effective catchability $q$ (which includes both true
+To estimate the relative availability of jack mackerel to different
+fleets, we analyzed catch data from 2004 to 2024. These data were
+smoothed using a 5-year moving average to reduce annual variability.
+The goal was to have some basis for defining changes in availability to
+coastal and offshore areas in a way that could roughly
+approximate the effective catchability $q$ (which includes both true
 catchability and availability) of the fishery, i.e.:
 
 $$
@@ -388,22 +457,21 @@ the "coastal" areas compared to the offshore fleet.**
 ### Range of Change in Estimated Availability
 
 Given this pattern we can assume a relative catchability due to an
-environmental effect. We note that the
+environmental effect. We note that the coastal effective catchability 
+increased from a low of 74% (2006–2010) to a high of 94% (2018–2024), representing
+20 percentage point change.
+Meanwhile, the offshore effective catchability declined from a high of 26%
+(2006–2010) to a low of 6% (2018–2024), representing a 20 percentage 
 
--   **Coastal effective catchability** increased from a low of **74%**
-    (2006–2010) to a high of **94%** (2018–2024), a **+20 percentage
-    point** change.
--   **Offshore effective catchability** declined from **26%** to **6%**.
-
-As a sensitivity, we could propose that the effective availability to
+As part of the robustness test, we propose that the effective availability to
 the offshore fleet drops from 15% of the biomass (the mean) to gradually
 to 6% during El Niño periods (a 60% decline in $q$ ). This would apply
 to the data generated for offshore CPUE index in the simulations. For
 the coastal zones, the effect of El Niño would correspond to an 11%
 increase in the availability of fish relative to the mean (85%). These
-changes would apply to the Chilean SC CPUE index and the Peruvian CPUE
+changes would apply to the Chilean south-central CPUE index and the Peruvian CPUE
 index data generation. This is one proposal among many that could be
-imagined. For example a slightly more conservative range could be based
+imagined. For example, a slightly more conservative range could be based
 on the 10th and 90th percentiles of estimated effective catchability
 (from proportional catches):
 
@@ -421,46 +489,6 @@ the relative abundance indicators in index values. These reflect
 patterns over the past two decades, possibly due to environmental
 changes.
 
-# Review of the Operating Model specifications
-
-The workshop reviewed the current specifications of the OMs. In
-particular, the assumptions for the reference point calculations were
-discusssed and contrasted with the 2024 assessment results and reports
-(@sprfmo2024annex7). Due to the terminal (2024) estimates of fisheries
-selectivities, the assessment report had anomalously high values for
-$F_{MSY}$
-
-While the 2024 stock assessment produced high estimates of potential
-catch under the third tier of the harvest control rule—exceeding 4,900
-kt based on $F_{MSY}$—this result was considered unrealistic due to
-likely upward bias in $F_{{MSY}}$ estimates caused by strong selection
-on older fish. As a result, the Scientific Committee recommended
-constraining the 2025 TAC to be at or below 1,428 kt, representing only
-a 15% increase from 2024 levels and aligned with the Commission’s
-guidance. In developing the OM, reference points such as $F_{{MSY}}$
-were instead based on longer-term averages to avoid the influence of
-short-term variability or cohort effects, ensuring more stable and
-precautionary management advice consistent with the MSE framework
-(@fig-ref_pts).
-
-![Distribution of reference points from the operating model accepted by
-the workshop.](images/ref_pts.png){#fig-ref_pts}
-
-Several issues were identified with the current stock assessment that
-warrant further attention ahead of the next benchmark. Key among them
-are uncertainties in catch-at-age data stemming from differences in age
-determination methods across laboratories, as well as assumptions about
-mean body weight at age. The Scientific Committee emphasized the need
-for standardizing CPUE indices and improving data collection protocols,
-particularly regarding fleet-specific efficiency changes. Sensitivities
-to early age composition data—especially from the pre-1990 period—remain
-unresolved, with residual patterns noted for the North Chilean fleet. In
-addition, assumptions underlying selectivity and recruitment regimes
-were highlighted as critical sources of uncertainty, with substantial
-influence on reference points and management advice. Finally, the
-Committee underscored the importance of continued evaluation of
-single-stock versus two-stock model structures using simulation and MSE
-tools.
 
 # Summary of Workshop Outcomes
 
