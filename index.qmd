@@ -494,12 +494,18 @@ changes.
 
 The SCW15 workshop provided a venue for progressing the Jack Mackerel
 MSE work, resolving some technical issues, and evaluating multiple MP
-configurations. A key outcome was the identification of problems in how
-MPs interacted with the OMs. This raised the need for either resolution
-of MP specification issues prior to the SC and/or holding a separate
-follow-up technical meeting, ideally in person. This would focus
-discussion on narrowing MP options. Depending on this direction, it may
-mean that such a meeting would have to occur after February 2026 and the
+configurations. A key outcome was the identification of problems in being
+able to clearly show how a tested MP would perform in terms of
+reaction to different signals from the indices, and how this
+would translate into catch levels. The group noted that the current
+jmMSE framework was capable of simulating a wide range of MPs, but
+more work is needed for member scientists to effectively communicate the
+tradeoffs and applicaitons of these MPs to the Commission.
+The group noted that these issues can be discussed prior to the SC and
+some technical communications would be encouraged.
+These have focussed on narrowing MP options and refining things for presentation
+to the SC. Depending on this direction, it may
+mean that an additional in-person meeting should occur after February 2026 and the
 Commission meeting.
 
 Regarding the ability and facility for member scientists to use and
