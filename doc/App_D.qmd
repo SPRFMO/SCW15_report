@@ -7,7 +7,7 @@ format:
 
 
 
-Dr. Ana Parma, along with Qi Lee reviewed the jmMSE framework and its
+Dr. Ana Parma, reviewed the jmMSE framework and its
 application to evaluating candidate management procedures (CMPs) for
 jack mackerel. Their comments provide both a validation of the current
 approach and targeted suggestions for improvement.

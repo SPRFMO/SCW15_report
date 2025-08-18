@@ -233,6 +233,7 @@ outputs ahead of Scientific Committee and Commission review.
 #| error: false
 #| results: 'asis'
 
+library(tidyverse)
 library(DiagrammeR)
 library(DiagrammeRsvg)
 library(rsvg)
@@ -846,6 +847,7 @@ dev.off()
 
 ```
 
+
 ### Using openMSE's Slick Output {#sec-slick}
 
 Using the `Slick` package (@slick2024), performance metrics such as
@@ -920,6 +922,8 @@ saveRDS(sli, file="demo/PayaShortCuts_2.slick")
 ```
 
 ### Other tools for viewing performance indicators {#sec-flr}
+
+#### Further performance evaluation of the shortcut MPs
 
 This section summarizes performance using FLR tools from the `mseviz`
 package (@mseviz2022). Average values are computed for specified periods
@@ -1176,6 +1180,140 @@ plotTOs(perf |>
   scale_fill_flr() + ylim(c(0,NA)) + xlab("Catch")
 dev.off()
 ```
+
+#### Shortcut sensitivity analysis {#sec-shortcut}
+
+The shortcut method is designed to simplify the estimation of a stock assessment process
+and the results shown in the previous section illustrate how this can be reflected based
+on performance metrics. Here we test the sensitivity of the shortcut method if in fact
+the "noisiness" is greater and if there is a bias in stock size estimates. 
+
+The goal of this section is to see if the constraints affect performance indicators
+differently than the previous section. We will use the same shortcut method but with
+added noise and potential bias in the stock size estimates. Results show that the
+diagnostics are insensitive to the noise and bias in the stock size estimates 
+(@fig-sc_alts). Similarly, except for the inter-annual catch variability (IAC(C)), 
+the performance indicators were unaffected by the
+banking and borrow (as part of the implementation error specification; @fig-bank_borrow). 
+"Banking" TAC tended to lower the inter-annual variability in catch whereas "borrowing"
+increased it. 
+
+ 
+ From this we can conclude that while incomplete in the context of a final set of candidate 
+ MPs, the SC could recommend an interim measure based on the characteristics of
+ different TAC change constraints.
+
+!["Comparison of performance indicators for different "shortcut" MPs all tuned to 
+satisfy the constraint that they result in 60% probability of being in the green zone
+of the Kobe plot.](images/sc_good_med_bad.png){#fig-sc_alts
+fig-align="center"}
+
+!["Comparison of performance indicators for different "banking and borrowing" 
+configurations for MPs all tuned to 
+satisfy the constraint that they result in 60% probability of being in the green zone
+of the Kobe plot.](images/bank_borrow.png){#fig-bank_borrow
+fig-align="center"}
+
+
+```{r hcr-targets-scbad}
+#| eval: false
+#| echo: false
+#| message: false
+#| warning: false
+TAC2025 <- 1552.5
+
+  metdevs <- rlnormar1(dims(om)$iter, meanlog=0, sdlog=0.20, rho=.70, years=seq(1970, 2045))
+ctrl <- mpCtrl(list(
+  est = mseCtrl(method=shortcut.sa_bad, args=list(metric="depletion", devs=metdevs, B0=refpts(om)$SB0)),
+  hcr = mseCtrl(method=buffer.hcr,
+               args=list(target=1000, bufflow=0.30, buffupp=0.50, lim=0.10, min=0, metric="depletion")),
+  isys = mseCtrl(method=split.is, args=list(split=catch_props(om)$last5))
+))
+targs_scbad <- mps(om, oem, ctrl=ctrl, args=mseargs,
+               hcr=list(target=c(TAC2025*0.85, TAC2025, TAC2025*1.15, TAC2025*1.25)))
+#--Now bad w/ constraints------
+args(ctrl$hcr)[c("dlow", "dupp")] <- c(0.85, 1.15)
+targs_scbad_lim15 <- mps(om, oem, ctrl=ctrl, args=mseargs,
+               hcr=list(target=c(TAC2025*0.85, TAC2025, TAC2025*1.15, TAC2025*1.25)))
+
+args(ctrl$hcr)[c("dlow", "dupp")] <- c(0.75, 1.15)
+targs_scbad_lim2515 <- mps(om, oem, ctrl=ctrl, args=mseargs,
+               hcr=list(target=c(TAC2025*0.85, TAC2025, TAC2025*1.15, TAC2025*1.25)))
+#--combmne up?---
+targs_lim2515_scbad<- FLmses(targs_scbad_lim2515, statistics=statistics,
+               years=2024:2045, metrics=mets, type="scbad_d2515")
+targs_lim15_scbad<- FLmses(targs_scbad_lim15, statistics=statistics,
+               years=2024:2045, metrics=mets, type="scbad_d15")
+
+targs_scbad <- FLmses(targs_scbad, statistics=statistics,
+                      years=2024:2045, metrics=mets, type="scbad_d00")
+perf <- rbind(performance(targs_scbad),performance(targs_lim15_scbad),
+              performance(targs_lim2515_scbad))
+omperf <- performance(om, statistics=statistics[c("C", "F", "SB")])
+writePerformance(perf, file="demo/targs_scbad.dat.gz")
+# head(perf)
+# tail(perf)
+# unique(perf$mp)
+# perf <- readPerformance("demo/targs_scbad.dat.gz") 
+perf <- perf |> mutate(data=ifelse((statistic=='F'&data>2),2,data))
+#unique(perf$statistic)
+perf<-  perf %>%
+  mutate(
+    # Extract the part after "_d" and before "_hcr"
+    d_part = str_extract(mp, "(?<=_d)[^_]+"),
+    # Extract the trailing number after the last "_"
+    target_num = str_extract(mp, "[0-9.]+$"),
+    # Create short name by combining them
+    mp  = paste0("d", d_part, "_", 
+                 ifelse(target_num==1319.62,"0.85",
+                 ifelse(target_num==1552.5,"1.0",
+                 ifelse(target_num==1785.37,"1.15","1.25"))))
+  )
+perf <- periodsPerformance(perf, periods) 
+# perf |> filter(period=='tuning', statistic %in% c("SB","C", "IACC"),  mp %in% c("d00_1.0", "d15_1.0", "d2515_1.0")) |>
+#   ggplot(aes(x=as.factor(mp),y=data,fill=mp)) + geom_boxplot(outlier.shape=NA) + ggthemes::theme_few() +
+#   facet_wrap(.~statistic, scales="free_y") 
+
+png("images/sc_delta_TAC.png", width=900, height=800)
+plotBPs(perf |> 
+          filter(period=='tuning',  mp %in% c(
+            "d00_1.0", 
+            "d15_1.0", 
+            "d2515_1.0"
+            )), statistics=c(
+            "C",
+            "IACC",
+            "F",
+            "PTAClimit",
+            "SB" 
+            )) +
+  ggtitle("Shortcut MPs for Tuning Period (2034–2045)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("MP")
+  
+dev.off()
+
+png("images/sc_targ_TAC.png", width=900, height=800)
+plotBPs(perf |> 
+          filter(period=='tuning',  mp %in% c(
+            "d00_0.85", 
+            "d00_1.0", 
+            "d00_1.15", 
+            "d00_1.25" 
+            )), statistics=c(
+            "C",
+            "IACC",
+            "F",
+            "SB" 
+            )) +
+  ggtitle("Shortcut MPs for Tuning Period (2034–2045)") + ggthemes::theme_few(base_size = 16) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_flr() + ylim(c(0,NA)) + xlab("MP")
+  
+dev.off()
+
+```
+
 
 These diagnostics provide visual summaries of CMP performance across
 time horizons.
