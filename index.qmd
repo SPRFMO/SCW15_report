@@ -69,7 +69,7 @@ the basis for recommendations to the Science Committee.
     spatial availability, environmental regime shifts (e.g., El Niño Southern Oscillation (ENSO)),
     and stock structure were reviewed and refined for implementation.
 
-3.  **Indicator-Driven MPs and Harvest Control Rule (HCR) logic**\
+3.  **Indicator-driven MPs and harvest control rule (HCR) logic**\
     The workshop evaluated empirical MPs based on one or more indicators, with
     focus on two formulations:
 
@@ -79,12 +79,10 @@ the basis for recommendations to the Science Committee.
 
     The workshop tuned the MPs using the probability of being in the green zone of a Kobe plot (i.e., the biomass level is above the $B_{MSY}$ and the fishing effort is below $F_{MSY}$) as an objective. All candidate MPs were tuned to achieve a probability value of 60%, a value identified using a questionaire distributed to members during COMM13.
 
-MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the JMWG for advisory purposes, were used to tune MPs as well. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts showed …..
-
-HCR evaluation included limitation on year-to-year TAC changes as well as the option to bank / borrow quota from one year to the next. Results showed that ….
+<!-- LQ: I moved the subsequent paras to another section cause it seemed like this section was supposed to be a summary? -->
 
 
-4.  **Recommendations and Refinements**\
+4.  **Recommendations and refinements**\
     The participants recommended additional diagnostics and refinements,
     including:
 
@@ -98,13 +96,13 @@ HCR evaluation included limitation on year-to-year TAC changes as well as the op
         fleet selectivity and biological assumptions, particularly where
         CPUE is used as an input.
 
-5.  **Documentation and Transparency**\
+5.  **Documentation and transparency**\
     The participants emphasized the importance of transparency in documenting
     model assumptions, data sources, and MP structure. The group agreed
     on priorities for improving documentation and sharing annotated
     examples of MP behavior.
 
-6.  **Next Steps and Implementation**\
+6.  **Next steps and implementation**\
     The next phase of this work will focus on finalizing the candidate MPs,
     running the robustness tests, and summarizing trade-offs across key
     performance indicators. In discussions, we also identified future
@@ -226,79 +224,7 @@ workshop emphasized transparency, reproducibility, and documentation,
 with clear objectives to improve the utility and credibility of the MSE
 outputs ahead of Scientific Committee and Commission review.
 
-```{r }
-#| echo: false
-#| eval: false
-#| warning: false
-#| message: false
-#| error: false
-#| results: 'asis'
-
-library(DiagrammeR)
-library(DiagrammeRsvg)
-library(rsvg)
-
-# Create the DiagrammeR object
-diagram <- grViz("
-digraph mp_flow {
-  graph [layout = dot, rankdir = TB]
-
-  node [shape = box, style = filled, fillcolor = lightgrey, fontname = Helvetica]
-  examine [label = 'Examine tuned MPs\\n(indices and controls)']
-  pick [label = 'Pick reasonable candidates']
-  evaluate [label = 'Evaluate via robustness tests\\n(no re-tuning)']
-  enso [label = 'ENSO']
-  h2 [label = 'H2']
-  h2m [label = 'H2m']
-  others [label = 'Others']
-  report [label = 'Report on relative performance\\nand trade-offs']
-
-  node [shape = box, style = filled, fillcolor = midnightblue, fontname = Helvetica, fontcolor = white]
-  stage1 [label = 'Stage 1']
-  stage2 [label = 'Stage 2']
-  stage3 [label = 'Stage 3']
-
-  stage1 -> examine -> pick -> stage2 -> evaluate
-  evaluate -> enso
-  evaluate -> h2
-  evaluate -> h2m
-  evaluate -> others
-
-  enso -> stage3
-  h2 -> stage3
-  h2m -> stage3
-  others -> stage3
-
-  stage3 -> report
-}
-")
-
-# Export as SVG then convert to PNG
-svg_file <- "images/mp_flow.svg"
-png_file <- "images/mp_flow.png"
-writeLines(export_svg(diagram), svg_file)
-rsvg_png(svg_file, png_file)
-```
-
-We provide a general outline for the workflow for
-defining and evaluating MPs, dividing the
-process into three main stages (@fig-mp_flow). The framework for this workflow
-was made available to all participants to explore and implement.
-However, the group encountered some technical challenges in Stage 1,
-during the process of tuning MPs towards a common objective.
-
-![Workflow for evaluating and selecting candidate management procedures
-(MPs).](images/mp_flow.png){#fig-mp_flow fig-align="center"}
-
-
-In Stage 1, a key activity is to "tune" MPs towards a common objective. As mentioned 
-previously, tuning MPs allows for more direct and straightforward comparisons 
-between candidate MPs. The tuning objective was set as the probability of being in the green zone of the Kobe plot (i.e., the biomass level is above the $B_{MSY}$ and the fishing effort is below $F_{MSY}$) for the final years of the projection period. All candidate MPs were tuned to achieve a probability value of 60%, a value identified using a questionaire distributed to members during COMM13.
-
-The framework for this exercise was made available for all participants 
-to explore and implement. However, the group encountered difficulties ascertaining 
-how the projected TACs were calculated from the empirical MPs that were being 
-tested. -->
+<!-- LQ: Not totally sure whether the next few paras about the MP formulation really fit well in this intro section? Moved to its own section -->
 
 The appendices provide the [participants](doc/App_A.qmd), the
 [agenda](doc/App_B.qmd), and the daily summary activities in the
@@ -309,13 +235,7 @@ The following sections review the work conducted during the workshop,
 separated into three sections: 1) reviewing the OM specifications, 2) implementing
 robustness tests, and 3) applying and refining of candidate MPs. We conclude with a set of recommendations for the SC to consider.
 
-
 <!-- LQ: I think this falls under the robustness testing, but I could be wrong? -->
-<!-- We follow this with some discussion on how best to incorporate
-some environmental effects for projecting from the operating model.
-Specifically, we considered how to account for the effects of El Niño on
-recruitment and catchability/availability. --> 
-
 
 
 # Review of the Operating Model specifications
@@ -380,15 +300,15 @@ biological or fishery-based justification, and evaluation priority. The
 table is divided into two sections: effects that are prioritized for
 immediate evaluation and those deferred for further study.
 
-The first items highlights two key El Niño-driven effects: A 30%
+The first section highlights two key El Niño-driven effects: 1) a 30%
 increase in recruitment with a one-year lag, linked to ENSO-related
-early life stage survival (@fig-enso-recruitment). Shifts in
+early life stage survival (@fig-enso-recruitment), and 2) shifts in
 catchability, with coastal regions experiencing increased availability
 and offshore regions seeing declines, reflecting observed onshore
-movement of fish during warm anomalies. This is also high-priority, with
+movement of fish during warm anomalies. The latter effect was identified as high-priority, with
 a focus on quantifying impacts on fishery removals.
 
-The deferred effects were discussed and included the potential for
+The deferred effects included the potential for
 reduced weight-at-age (potentially due to prey scarcity), earlier
 maturity (a stress response observed in small pelagics), and increased
 natural mortality (from predation or environmental stress). These are
@@ -432,7 +352,8 @@ To estimate the relative availability of jack mackerel to different
 fleets, we analyzed catch proportion data from 2004 to 2024. These data were
 smoothed using a 5-year moving average to reduce annual variability. The data from 
 the Chilean, Peruvian, and Ecuadorian fleets were classified as coastal, whereas the 
-data from the other fleets were classified as offshore. <!--  LQ: ? -->
+data from the other fleets were classified as "offshore" for the purpose of approximating
+changes in avaialbility. <!--  LQ: ? -->
 The goal was to have some basis for defining changes in availability to
 coastal and offshore areas in a way that could roughly
 approximate the effective catchability $q$ (which includes both true
@@ -470,16 +391,15 @@ availability of the resource to each fleet.
 the "coastal" areas compared to the offshore fleet.**
 
 ### Range of changes in estimated availability
-
-Given this pattern we can assume a relative catchability due to an
+Given the shift in catch proportions over this period, we can assume a relative catchability due to an
 environmental effect. We note that the coastal effective catchability 
 increased from a low of 74% (2006–2010) to a high of 94% (2018–2024), representing
 20 percentage point change.
 Meanwhile, the offshore effective catchability declined from a high of 26%
-(2006–2010) to a low of 6% (2018–2024), representing a 20 percentage 
+(2006–2010) to a low of 6% (2018–2024), representing a decrease of 20%.
 
 As part of the robustness test, we propose that the effective availability to
-the offshore fleet gradually drops from 15% of the (mean <!--  LQ: ? -->) biomass to 
+the offshore fleet gradually drops from 15% of the mean biomass to 
 6% during El Niño periods (a 60% decline in $q$ ). This would apply
 to the data generated for offshore CPUE index in the simulations. For
 the coastal zones, the effect of El Niño would correspond to an 11%
@@ -581,7 +501,7 @@ During the tuning process, the group noted that the current high stock status te
 how the projected TACs were calculated from the empirical MPs that were being 
 tested.
 
-We also tuned MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the Jack Mackerel Working Group (JMWG) for advisory purposes. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts showed ….. More details can be found in @@sec-shortcut.
+We also tuned MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the Jack Mackerel Working Group (JMWG) for advisory purposes. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts can be found in @@sec-shortcut.
 
 ## HCR Evaluation
 
@@ -668,7 +588,6 @@ An initial set of deliverables that have been completed include:
     -   Slick MSE results summary.
 
 
-
 ### Near term tasks
 
 Participants were encouraged to document their activities during the
@@ -749,29 +668,6 @@ df %>%
 
 ```
 
-The SC Chair, Ricardo developed some enhancements to the jmMSE demo 
-framework after the workshop. These introduce greater flexibility
-and diagnostic power through two key components: performance2() and
-evaluate_mp(). The performance2() function extends standard summary outputs by
-computing a richer set of indicators—such as mean relative biomass and fishing
-mortality, catch, the probability of remaining in the green zone of the Kobe
-plot, and the longest duration spent outside it.
-<!-- (@fig-performance2).  -->
-The evaluate_mp() function wraps the full
-MP simulation while allowing multi-parameter optimization of Harvest Control
-Rule (HCR) settings, and it incorporates a customizable objective function that
-accounts for discounted catch, stability (via IACV), conservation thresholds
-(e.g., probability of being “green”), and duration outside target reference
-points. This setup allows for filtering out implausible simulations, facilitates
-adaptive MP tuning, and supports rapid exploration of trade-offs in management
-performance. Together, these tools make the MSE evaluation process more
-transparent, efficient, and tailored to decision-maker priorities.
-
-This and other work conducted after the workshop encountered problems with the
-magnitude of recruitment variability which led to unreasonably high levels
-of biomass in a significant number of the simulations. This was something that
-required further investigation and resolution in collaboration with the developer (Iago). 
-
 
 ### Medium term tasks
 
@@ -833,19 +729,52 @@ years.
 
 \clearpage
 
-# Examples of Shortcut MPs {#sec-shortcut}
+# Code Examples
+The following sections document some of the work undertaken by workshop participants during and after the workshop. 
 
+## Package development
+The SC Chair, Ricardo, developed some enhancements to the `jmMSE` demo 
+framework after the workshop. These introduce greater flexibility
+and diagnostic power through two key components: `performance2()` and
+`evaluate_mp()`.
+
+The `performance2()` function extends standard summary outputs by
+computing a richer set of indicators. These indicators include mean relative biomass and fishing
+mortality, catch, the probability of remaining in the green zone of the Kobe
+plot, and the longest duration spent outside it.
+<!-- (@fig-performance2).  -->
+
+The `evaluate_mp()` function wraps the full
+MP simulation while allowing multi-parameter optimization of Harvest Control
+Rule (HCR) settings. It also incorporates a customizable objective function that
+accounts for discounted catch, stability (via interannual catch variability (IACV)), conservation thresholds
+(e.g., probability of being “green”), and duration outside target reference
+points. This setup allows for filtering out of implausible simulations, facilitates
+adaptive MP tuning, and supports rapid exploration of trade-offs in management
+performance. Together, these tools make the MSE evaluation process more
+transparent, efficient, and tailored to decision-maker priorities.
+
+<!-- LQ: Is this supposed to be here? Maybe we need a section summarising issues encountered? -->
+This and other work conducted after the workshop encountered problems with the
+magnitude of recruitment variability which led to unreasonably high levels
+of biomass in a significant number of the simulations. This was something that
+required further investigation and resolution in collaboration with the developer (Iago). 
+
+
+## Examples of Shortcut MPs {#sec-shortcut}
+
+<!-- LQ: What's "defining control logic"? -->
 This section was compiled by Ignacio Payá and colleagues from Chile. It
 summarizes an example implementation of "shortcut" management procedures
 (MPs) that simplify the estimation and harvest control rule (HCR) steps
 using buffered depletion-based control. It also illustrates how
 FLR-based tools can be used to define control logic, evaluate HCR
 targets, and visualize results using the `Slick` (@slick2024) and
-`mseviz` (@mseviz2022) R packages. for performance evaluation. Each
+`mseviz` (@mseviz2022) R packages for performance evaluation. Each
 section below includes code, explanation, and figures that demonstrate
 specific aspects of the approach.
 
-## Shortcut MP Definition {#sec-def}
+### Shortcut MP Definition {#sec-def}
 
 This section defines the MP structure using `mpCtrl()` with shortcut
 estimation (`shortcut.sa`), a buffer-based HCR, and a split
@@ -884,8 +813,9 @@ ctrl <- mpCtrl(list(
 ### HCR Target Exploration {#sec-hcr}
 
 To evaluate MP performance under various Total Allowable Catch (TAC)
-values, the control object from [Section @sec-def] is tested across a
-set of TAC multipliers. The target range brackets the 2025 CMM level.
+values, the control object (`ctrl`) from [Section @sec-def] is tested across a
+set of TAC multipliers. The target range brackets the 2025 CMM level. In this example,
+the multipliers tested are 0.85, 1, 1.15, and 1.25 of the 2025 TAC.
 This produces comparative projection plots for four candidate TAC levels
 (@fig-tac-proj).
 
@@ -908,7 +838,8 @@ HCR.](images/Projections_Sc_har_Around_TAC2025.png){#fig-tac-proj
 fig-align="center"}
 
 Now we test this with a simple limit on the annual change in TAC, which
-is a common requirement in many fisheries management systems. These
+is a common requirement in many fisheries management systems. In other words, the 
+TAC for a subsequent year cannot increase or decrease beyond a specified percentage. These
 results compare similarly to those without any TAC constraint
 (@fig-targets_lim). A clearer evaluation of these two sets is shown in
 the next section using the `Slick` package.
@@ -1107,7 +1038,7 @@ plotBPs(perf |>
 dev.off()
 ```
 
-The performance of shortcut management procedures (MPs) over the tuning
+The performance of multiple shortcut MPs over the tuning
 period (2034–2045) were contrasted as an example. Here, each MP was run
 with catch "targets" at different level relative to the 2025 TAC (1.5525
 million t). They ranged from 85% (d00_0.85) to 125% (d00_1.25), with no
@@ -1126,13 +1057,13 @@ We then compared performance of shortcut MPs all tuned to the 2025 TAC
 target (1.5525 million t), but with different constraints on interannual
 changes in TAC. These included (as in the previous figure) no constraint
 on TAC changes (d00), a symmetric ±15% constraint (d15), and an
-asymmetric −25%/+15% constraint (d2515). While mean catch (mean(C)) is
+asymmetric −25%/+15% constraint (d2515). While mean(C) is
 similar across all three MPs, the application of TAC constraints notably
-reduces interannual variability (IAC(C)) compared to the unconstrained
+reduces IAC(C) compared to the unconstrained
 case (@fig-deltaTAC). This stability comes with trade-offs—particularly
 a modest increase in the probability of hitting a predefined TAC floor
-(P(TAClimit)) for d15 and d2515. Spawning biomass (SB) and fishing
-mortality (F) remain broadly similar across scenarios, suggesting that
+(P(TAClimit)) for d15 and d2515. SB and F 
+remain broadly similar across scenarios, suggesting that
 moderate TAC constraints can improve catch stability without severely
 compromising stock status. Overall, the results highlight the
 stabilizing benefit of delta-TAC constraints, with d15 offering the most
@@ -1142,10 +1073,9 @@ As an alternative, we show figures that highlight short-term (2025–2027)
 trade-offs among shortcut MPs based on either different TAC targets
 (@fig-targsTO) or different TAC change constraints (@fig-deltaTO).
 Increasing the TAC target from 85% to 125% of the 2025 TAC results in
-expected increases in catch, but also in fishing mortality (F) and
-interannual catch variability (IAC(C)), with slight declines in spawning
-biomass (SB). All options show negligible probability of hitting the TAC
-floor (P(TAClimit)). In contrast, comparing MPs with the same TAC target
+expected increases in catch, but also in F and IAC(C), with slight 
+declines in spawning SB. All options show negligible P(TAClimit). In 
+contrast, comparing MPs with the same TAC target
 (2025 level) but different delta-TAC constraints (@fig-deltaTO). While
 d00_1.0 provides slightly higher short-term catch, it exhibits greater
 catch variability and a marginally higher risk of triggering the TAC
@@ -1158,8 +1088,7 @@ volatility.
 While the general patterns observed in the short-term persist, the
 medium-term results show reduced separation across MPs in all
 performance metrics. For instance, in the TAC target comparison (top
-panel), differences in fishing mortality (F), interannual catch
-variability (IAC(C)), and spawning biomass (SB) across catch targets
+panel), differences in F, IAC(C), and SB across catch targets
 narrow considerably. This suggests that the system has begun to
 stabilize, with stock status and catch performance converging even under
 different TAC target levels (@fig-targsTOmed). Similarly, in the
@@ -1280,23 +1209,25 @@ dev.off()
 
 #### Shortcut sensitivity analysis {#sec-alt_shortcut}
 
-The shortcut method is designed to simplify the estimation of a stock assessment process
-and the results shown in the previous section illustrate how this can be reflected based
+The shortcut method is designed to simplify the estimation of a stock assessment process.
+The results shown in the previous section illustrate how this can be reflected based
 on performance metrics. Here we test the sensitivity of the shortcut method if in fact
-the "noisiness" is greater and if there is a bias in stock size estimates. 
+the random variability (i.e., "noisiness") in stock size estimates is greater or 
+if there is a bias in stock size estimates. 
 
 The goal of this section is to see if the constraints affect performance indicators
 differently than the previous section. We will use the same shortcut method but with
 added noise and potential bias in the stock size estimates. Results show that the
 diagnostics are insensitive to the noise and bias in the stock size estimates 
-(@fig-sc_alts). Similarly, except for the inter-annual catch variability (IAC(C)), 
-the performance indicators were unaffected by the
-banking and borrow (as part of the implementation error specification; @fig-bank_borrow). 
-"Banking" TAC tended to lower the inter-annual variability in catch whereas "borrowing"
+(@fig-sc_alts). Similarly, except for the IAC(C), the performance indicators were unaffected by the
+banking and borrowing (as part of the implementation error specification; @fig-bank_borrow). 
+"Banking" TAC, which involves transferring any unused catch to the following year's catch limit, 
+tended to lower the inter-annual variability in catch whereas "borrowing" (where the catch in excess 
+of the current year's limit is deducted from the next year's limit) <!-- LQ: I think? -->
 increased it. 
 
  
- From this we can conclude that while incomplete in the context of a final set of candidate 
+ From this we can conclude that, while incomplete in the context of a final set of candidate 
  MPs, the SC could recommend an interim measure based on the characteristics of
  different TAC change constraints.
 
@@ -1411,13 +1342,13 @@ dev.off()
 
 ```
 
-
+### Summary
 These diagnostics provide visual summaries of CMP performance across
 time horizons.
 This addendum presents a full example of how shortcut methods can be
-configured and evaluated in the jmMSE framework. The use of buffered
+configured and evaluated in the jmMSE framework. The use of a buffered
 harvest control, lognormal deviations, and simplified estimation methods
 make these examples especially useful for scoping and tuning phases of
 MSE development. Future iterations could generalize the estimation block
-or integrate OpenMSE for better interoperability.
+or integrate `OpenMSE` for better interoperability.
 
