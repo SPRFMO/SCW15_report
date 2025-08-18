@@ -35,7 +35,7 @@ reviewers to assess recent progress and refine the MSE framework being
 developed under South Pacific Regional Fisheries Management Organisation (SPRFMO). The primary goal of the workshop was to ensure that the modeling framework and management procedures (Management Procedures (MPs)) are
 scientifically sound, technically robust and transparent, and aligned with
 management priorities as outlined by the Commission (e.g.,
-@sprfmo2025jmwgmse. The workshop was successful in testing the framework, 
+@sprfmo2025jmwgmse). The workshop was successful in testing the framework, 
 it resulted in improved understanding of scientists in its 
 functioning and ability to test alternative MPs. Discussions during 
 the workshop contributed to small changes made in the conditioning 
@@ -48,16 +48,16 @@ the basis for recommendations to the Science Committee.
 1.  **MSE Framework Consolidation**\
     Participants reviewed the jmMSE software package, confirming that it
     provides a robust and flexible platform for conducting MSEs. The
-    package includes a reference set of operating models conditioned to
-    historical data using MCMC, an efficient MP tuning algorithm, and
-    tools for visualizing and comparing results.
+    package includes 1) a reference set of operating models conditioned to
+    historical data using Markov Chain Monte Carlo (MCMC; an efficient MP tuning 
+    algorithm), and 2) tools for visualizing and comparing results.
 
-2.  **MSE and OM fine-tuning**\
+2.  **MSE and OM Fine-Tuning**\
     The workshop focused on refining the operating models (OMs) to
     ensure they accurately represent the jack mackerel stock dynamics and
-    future behaviour. Participants discussed and implemented changes to the OM structure,
-    including adjustments to transitions to recruitment dynamics, and 
-    selectivity patterns, These refinements were aimed at improving the
+    future behaviour. Participants discussed and implemented changes to the OM 
+    structure, including adjustments to recruitment dynamics and 
+    selectivity patterns. These refinements were aimed at improving the
     realism of the OMs and their ability to simulate plausible future
     scenarios.
 
@@ -66,18 +66,18 @@ the basis for recommendations to the Science Committee.
     tests are intended to explore how candidate MPs perform under a range of
     plausible yet uncertain scenarios rather than represent definitive
     alternative models. Scenarios reflecting changes in recruitment,
-    spatial availability, environmental regime shifts (e.g., El Niño),
+    spatial availability, environmental regime shifts (e.g., El Niño Southern Oscillation (ENSO)),
     and stock structure were reviewed and refined for implementation.
 
-3.  **Indicator-Driven MPs and HCR logic**\
-    Empirical MPs based on one or more indicators were evaluated, with
+3.  **Indicator-Driven MPs and Harvest Control Rule (HCR) logic**\
+    The workshop evaluated empirical MPs based on one or more indicators, with
     focus on two formulations:
 
-    -   TAC as a product of a target and a multiplier from an index (index (e.g. a commercial CPUE).
+    -   Total Allowable Catch (TAC) as a product of a target and a multiplier from an index (e.g. a commercial catch per unit effort (CPUE)).
     -   TAC adjusted incrementally from the previous year based on index
         signals.
 
-We noted that the high current stock status (well within the Commission-defined “green zone” (indicating stock levels at or above target biomass)) tended to increase catch levels when tuning to achieve a desired probability to remain in the green zone (this probability is set to 60% by the Commission). This can result in declining stock trends later in the projection period, even when the short-term performance criteria are met, since current probability that the stock is in the green zone is well above this 60% target.
+    The workshop tuned the MPs using the probability of being in the green zone of a Kobe plot (i.e., the biomass level is above the $B_{MSY}$ and the fishing effort is below $F_{MSY}$) as an objective. All candidate MPs were tuned to achieve a probability value of 60%, a value identified using a questionaire distributed to members during COMM13.
 
 MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the JMWG for advisory purposes, were used to tune MPs as well. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts showed …..
 
@@ -89,7 +89,7 @@ HCR evaluation included limitation on year-to-year TAC changes as well as the op
     including:
 
     -   Adding plots of how index trajectories relate to TACs.
-    -   Including new performance metrics that reflect stock status and
+    -   New performance metrics that reflect stock status and
         trends in the final projection years.
     -   Ensuring consistent treatment of selectivity, weights-at-age,
         and catch splits in both projections and reference point
@@ -105,9 +105,9 @@ HCR evaluation included limitation on year-to-year TAC changes as well as the op
     examples of MP behavior.
 
 6.  **Next Steps and Implementation**\
-    The next phase of work will focus on finalizing the candidate MPs,
+    The next phase of this work will focus on finalizing the candidate MPs,
     running the robustness tests, and summarizing trade-offs across key
-    performance indicators. In discussions we also identified future
+    performance indicators. In discussions, we also identified future
     reporting needs, including summary tables and figures for managers,
     and exploration of reference points and evaluation criteria beyond
     the green zone probability.
@@ -207,20 +207,21 @@ real-world settings [@Carruthers2023].
 
 The SCW15 Jack Mackerel MSE Technical Workshop was convened in response
 to the Scientific Committee’s request for progress on developing and
-evaluating management procedures (MPs) for jack mackerel under the
+evaluating MPs for jack mackerel under the
 SPRFMO framework. The meeting was held over five days (14–18 July 2025)
 and hosted in a hybrid format, with active participation from in-person
 attendees in Seattle and remote collaborators from SPRFMO Member States
-and invited experts. This event followed on previous technical work,
-including the SCW14 benchmark, and focused on finalizing the reference
-set of operating models (OMs), implementing robustness tests, and
-refining MP candidates using the jmMSE software package.
+and invited experts. This event built on previous technical work,
+including the [SCW14 benchmark](https://sprfmo.int/assets/Meetings/SC_WS/SCW14-Jack-Mackerel-2022/SPRFMO-SC-JM-Benchmark-Workshop-2022-Report-SCW14.pdf). The focus was on finalizing the reference
+set of OMs, implementing robustness tests, and
+refining candidate MPs using the jmMSE software package.
 
 Throughout the week, participants engaged in live coding sessions,
 software validation, model tuning, and scenario refinement. The agenda
 was intentionally flexible, allowing the group to respond dynamically to
-technical challenges—such as issues with index generation, selectivity
-artifacts, and catch variability under different MP formulations. The
+technical challenges as they emerged.
+Examples of these included issues with index generation, selectivity
+patterns, and catch variability under different MP formulations. The
 workshop emphasized transparency, reproducibility, and documentation,
 with clear objectives to improve the utility and credibility of the MSE
 outputs ahead of Scientific Committee and Commission review.
@@ -233,7 +234,6 @@ outputs ahead of Scientific Committee and Commission review.
 #| error: false
 #| results: 'asis'
 
-library(tidyverse)
 library(DiagrammeR)
 library(DiagrammeRsvg)
 library(rsvg)
@@ -242,19 +242,21 @@ library(rsvg)
 diagram <- grViz("
 digraph mp_flow {
   graph [layout = dot, rankdir = TB]
-  node [shape = box, style = filled, fillcolor = lightgrey, fontname = Helvetica]
 
-  stage1 [label = 'Stage 1']
+  node [shape = box, style = filled, fillcolor = lightgrey, fontname = Helvetica]
   examine [label = 'Examine tuned MPs\\n(indices and controls)']
   pick [label = 'Pick reasonable candidates']
-  stage2 [label = 'Stage 2']
   evaluate [label = 'Evaluate via robustness tests\\n(no re-tuning)']
   enso [label = 'ENSO']
   h2 [label = 'H2']
   h2m [label = 'H2m']
   others [label = 'Others']
-  stage3 [label = 'Stage 3']
   report [label = 'Report on relative performance\\nand trade-offs']
+
+  node [shape = box, style = filled, fillcolor = midnightblue, fontname = Helvetica, fontcolor = white]
+  stage1 [label = 'Stage 1']
+  stage2 [label = 'Stage 2']
+  stage3 [label = 'Stage 3']
 
   stage1 -> examine -> pick -> stage2 -> evaluate
   evaluate -> enso
@@ -278,34 +280,42 @@ writeLines(export_svg(diagram), svg_file)
 rsvg_png(svg_file, png_file)
 ```
 
-By way of review, we provide a general outline for the workflow for
-defining and evaluating Management Procedures (MPs). We divided the
-process into three main stages noting that in stage 1, a 
-key activity is to "tune" MPs towards a common goal (@fig-mp_flow). Here
-that goal (based on the questionaire distributed to members durin COMM13) was to 
-achieve a 60% probability of remaining in the "green zone" (i.e., above the $B_{MSY}$
-reference point) in the final years of the projection period. 
+We provide a general outline for the workflow for
+defining and evaluating MPs, dividing the
+process into three main stages (@fig-mp_flow). The framework for this workflow
+was made available to all participants to explore and implement.
+However, the group encountered some technical challenges in Stage 1,
+during the process of tuning MPs towards a common objective.
 
 ![Workflow for evaluating and selecting candidate management procedures
 (MPs).](images/mp_flow.png){#fig-mp_flow fig-align="center"}
 
-The workshop participants recognized that all of the pieces for this
-exercise were available and implemented. However, the group encountered 
-difficulties ascertaining how the TACs related to the empirical MPs that
-were being tested. 
+
+In Stage 1, a key activity is to "tune" MPs towards a common objective. As mentioned 
+previously, tuning MPs allows for more direct and straightforward comparisons 
+between candidate MPs. The tuning objective was set as the probability of being in the green zone of the Kobe plot (i.e., the biomass level is above the $B_{MSY}$ and the fishing effort is below $F_{MSY}$) for the final years of the projection period. All candidate MPs were tuned to achieve a probability value of 60%, a value identified using a questionaire distributed to members during COMM13.
+
+The framework for this exercise was made available for all participants 
+to explore and implement. However, the group encountered difficulties ascertaining 
+how the projected TACs were calculated from the empirical MPs that were being 
+tested. -->
 
 The appendices provide the [participants](doc/App_A.qmd), the
 [agenda](doc/App_B.qmd), and the daily summary activities in the
 workshop [minutes](doc/App_C.qmd). A summary review written by the
 external experts is also [provided here](doc/App_D.qmd).
 
-The following sections first review the OM and some results from applying existing
-and refined MPs.  We follow this with 
-the discussion on how best to incorporate
+The following sections review the work conducted during the workshop,
+separated into three sections: 1) reviewing the OM specifications, 2) implementing
+robustness tests, and 3) applying and refining of candidate MPs. We conclude with a set of recommendations for the SC to consider.
+
+
+<!-- LQ: I think this falls under the robustness testing, but I could be wrong? -->
+<!-- We follow this with some discussion on how best to incorporate
 some environmental effects for projecting from the operating model.
 Specifically, we considered how to account for the effects of El Niño on
-recruitment and catchability/availability. 
-We conclude with a set of recommendations for the SC to consider.
+recruitment and catchability/availability. --> 
+
 
 
 # Review of the Operating Model specifications
@@ -319,7 +329,7 @@ $F_{MSY}$
 
 While the 2024 stock assessment produced high estimates of potential
 catch under the third tier of the harvest control rule—exceeding 4,900
-kt based on $F_{MSY}$—this result was considered unrealistic due to
+kt based on $F_{MSY}$—this result was considered unrealistic. That was due to
 likely upward bias in $F_{{MSY}}$ estimates caused by strong selection
 on older fish. As a result, the Scientific Committee recommended
 constraining the 2025 TAC to be at or below 1,428 kt, representing only
@@ -351,7 +361,8 @@ single-stock versus two-stock model structures using simulation and MSE
 tools.
 
 
-# Simulating El Niño effects in the Operating Model
+# OM scenarios for robustness testing
+## Simulating El Niño effects in the Operating Model
 
 To incorporate climate-driven variability into the Operating Model (OM)
 projections, we defined a scenario simulating El Niño–like events every
@@ -414,22 +425,25 @@ directions, and justification.
 | Coastal selectivity | Age 1–2 sel ↑ | Spatial contraction, availability change | Confirm from CPUE by age? |
 | M ↑30%/20% | ↓ Survival | Stress-induced mortality, predation |  |
 
-## Estimating Relative Availability from Catch Proportions
+
+### Estimating relative availability from catch proportions
 
 To estimate the relative availability of jack mackerel to different
-fleets, we analyzed catch data from 2004 to 2024. These data were
-smoothed using a 5-year moving average to reduce annual variability.
+fleets, we analyzed catch proportion data from 2004 to 2024. These data were
+smoothed using a 5-year moving average to reduce annual variability. The data from 
+the Chilean, Peruvian, and Ecuadorian fleets were classified as coastal, whereas the 
+data from the other fleets were classified as offshore. <!--  LQ: ? -->
 The goal was to have some basis for defining changes in availability to
 coastal and offshore areas in a way that could roughly
 approximate the effective catchability $q$ (which includes both true
-catchability and availability) of the fishery, i.e.:
+catchability and availability) of the fishery for each fleet, i.e.:
 
 $$
 \text{Catch}_{\text{fleet}} \propto q_{\text{fleet}} 
 $$
 
 Thus, observed catch proportions can serve as a proxy for relative
-availability.
+availability of the resource to each fleet.
 
 | Year Range | Coastal (%) | Offshore (%) |
 |-----------:|------------:|-------------:|
@@ -455,7 +469,7 @@ availability.
 : **5-year moving averages of the proportion of the catch occurring in
 the "coastal" areas compared to the offshore fleet.**
 
-### Range of Change in Estimated Availability
+### Range of changes in estimated availability
 
 Given this pattern we can assume a relative catchability due to an
 environmental effect. We note that the coastal effective catchability 
@@ -465,8 +479,8 @@ Meanwhile, the offshore effective catchability declined from a high of 26%
 (2006–2010) to a low of 6% (2018–2024), representing a 20 percentage 
 
 As part of the robustness test, we propose that the effective availability to
-the offshore fleet drops from 15% of the biomass (the mean) to gradually
-to 6% during El Niño periods (a 60% decline in $q$ ). This would apply
+the offshore fleet gradually drops from 15% of the (mean <!--  LQ: ? -->) biomass to 
+6% during El Niño periods (a 60% decline in $q$ ). This would apply
 to the data generated for offshore CPUE index in the simulations. For
 the coastal zones, the effect of El Niño would correspond to an 11%
 increase in the availability of fish relative to the mean (85%). These
@@ -489,6 +503,90 @@ These shifts may provide some scope for showing the impact of changes in
 the relative abundance indicators in index values. These reflect
 patterns over the past two decades, possibly due to environmental
 changes.
+
+# Management Procedure formulation and tuning
+
+```{r }
+#| echo: false
+#| eval: false
+#| warning: false
+#| message: false
+#| error: false
+#| results: 'asis'
+
+library(DiagrammeR)
+library(DiagrammeRsvg)
+library(rsvg)
+
+# Create the DiagrammeR object
+diagram <- grViz("
+digraph mp_flow {
+  graph [layout = dot, rankdir = TB]
+
+  node [shape = box, style = filled, fillcolor = lightgrey, fontname = Helvetica]
+  examine [label = 'Examine tuned MPs\\n(indices and controls)']
+  pick [label = 'Pick reasonable candidates']
+  evaluate [label = 'Evaluate via robustness tests\\n(no re-tuning)']
+  enso [label = 'ENSO']
+  h2 [label = 'H2']
+  h2m [label = 'H2m']
+  others [label = 'Others']
+  report [label = 'Report on relative performance\\nand trade-offs']
+
+  node [shape = box, style = filled, fillcolor = midnightblue, fontname = Helvetica, fontcolor = white]
+  stage1 [label = 'Stage 1']
+  stage2 [label = 'Stage 2']
+  stage3 [label = 'Stage 3']
+
+  stage1 -> examine -> pick -> stage2 -> evaluate
+  evaluate -> enso
+  evaluate -> h2
+  evaluate -> h2m
+  evaluate -> others
+
+  enso -> stage3
+  h2 -> stage3
+  h2m -> stage3
+  others -> stage3
+
+  stage3 -> report
+}
+")
+
+# Export as SVG then convert to PNG
+svg_file <- "images/mp_flow.svg"
+png_file <- "images/mp_flow.png"
+writeLines(export_svg(diagram), svg_file)
+rsvg_png(svg_file, png_file)
+```
+
+We provide a general outline for the workflow for
+defining and evaluating MPs, dividing the
+process into three main stages (@fig-mp_flow). The framework for this workflow
+was made available to all participants to explore and implement.
+
+![Workflow for evaluating and selecting candidate management procedures
+(MPs).](images/mp_flow.png){#fig-mp_flow fig-align="center"}
+
+## Tuning to P(Green)
+In Stage 1, a key activity is to "tune" MPs towards a common objective. Tuning MPs 
+allows for more direct and straightforward comparisons of trade-offs 
+between candidate MPs. The tuning objective was set as the probability of being in 
+the green zone of the Kobe plot (i.e., the biomass level is above the $B_{MSY}$ and 
+the fishing effort is below $F_{MSY}$) for the final years of the projection period. This probability is denoted as ("P(Green)"). 
+All candidate MPs were tuned to achieve a P(Green) value of 60%, a value 
+identified using a questionaire distributed to members during COMM13.
+
+During the tuning process, the group noted that the current high stock status tended to increase catch levels, particularly at the beginning of the projection period. This can result in declining stock trends later in the projection period, even when the short-term performance criteria are met, since the current P(Green) is well above this 60% target. There were also difficulties ascertaining 
+how the projected TACs were calculated from the empirical MPs that were being 
+tested.
+
+We also tuned MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the Jack Mackerel Working Group (JMWG) for advisory purposes. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts showed ….. More details can be found in @@sec-shortcut.
+
+## HCR Evaluation
+
+HCR evaluation included limitation on year-to-year TAC changes as well as the option to bank / borrow quota from one year to the next. Results showed that ….
+
 
 
 # Summary of Workshop Outcomes
@@ -847,7 +945,6 @@ dev.off()
 
 ```
 
-
 ### Using openMSE's Slick Output {#sec-slick}
 
 Using the `Slick` package (@slick2024), performance metrics such as
@@ -1181,7 +1278,7 @@ plotTOs(perf |>
 dev.off()
 ```
 
-#### Shortcut sensitivity analysis {#sec-shortcut}
+#### Shortcut sensitivity analysis {#sec-alt_shortcut}
 
 The shortcut method is designed to simplify the estimation of a stock assessment process
 and the results shown in the previous section illustrate how this can be reflected based
