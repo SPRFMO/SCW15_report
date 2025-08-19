@@ -503,11 +503,6 @@ tested.
 
 We also tuned MPs using short-cut assessment methods, mimicking the behaviour of the jjm model as used by the Jack Mackerel Working Group (JMWG) for advisory purposes. These short-cut approaches considered observations with relatively low uncertainty, high uncertainty and uncertainty with autocorrelation incorporated. Results using these short-cuts can be found in @@sec-shortcut.
 
-## HCR Evaluation
-
-HCR evaluation included limitation on year-to-year TAC changes as well as the option to bank / borrow quota from one year to the next. Results showed that ….
-
-
 
 # Summary of Workshop Outcomes
 
