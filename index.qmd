@@ -32,14 +32,19 @@ editor:
 The Jack Mackerel Management Strategy Evaluation (MSE) Technical
 Workshop brought together scientists, technical experts, and external
 reviewers to assess recent progress and refine the MSE framework being
-developed under South Pacific Regional Fisheries Management Organisation (SPRFMO). The primary goal of the workshop was to ensure that the modeling framework and management procedures (Management Procedures (MPs)) are
-scientifically sound, technically robust and transparent, and aligned with
-management priorities as outlined by the Commission (e.g.,
-@sprfmo2025jmwgmse). The workshop was successful in testing the framework, 
+developed under South Pacific Regional Fisheries Management Organisation (SPRFMO). 
+The primary goal of the workshop was to ensure that the modeling framework 
+<!-- and management procedures (Management Procedures (MPs)) are -->
+is scientifically sound, technically robust and transparent, and 
+to produce a set of candidate management procedures to present to the 13th SC,
+as outlined by the Commission (e.g., @sprfmo2025jmwgmse). 
+The workshop was successful in testing the framework, 
 it resulted in improved understanding of scientists in its 
 functioning and ability to test alternative MPs. Discussions during 
-the workshop contributed to small changes made in the conditioning 
-of the Operating Models (OMs) to improve the robustness of the results. 
+the workshop contributed to some changes made in the conditioning 
+of the Operating Models (OMs) and in the algorithms of the harvest control rules
+to improve the robustness of the results. Further review and discussion are needed
+to agree on a set of candidate management procedures.
 Finally, the framework and preliminary results were accepted by the group as 
 the basis for recommendations to the Science Committee. 
 
@@ -73,7 +78,8 @@ the basis for recommendations to the Science Committee.
     The workshop evaluated empirical MPs based on one or more indicators, with
     focus on two formulations:
 
-    -   Total Allowable Catch (TAC) as a product of a target and a multiplier from an index (e.g. a commercial catch per unit effort (CPUE)).
+    -   Total Allowable Catch (TAC) as a product of a target and a multiplier from an index 
+    (e.g. biomass from scientific surveys and /or commercial catch per unit effort (CPUE)).
     -   TAC adjusted incrementally from the previous year based on index
         signals.
 
@@ -95,6 +101,7 @@ the basis for recommendations to the Science Committee.
     -   Exploring robustness scenarios that account for variability in
         fleet selectivity and biological assumptions, particularly where
         CPUE is used as an input.
+    -   Exploring alternative HCRs.
 
 5.  **Documentation and transparency**\
     The participants emphasized the importance of transparency in documenting
@@ -249,7 +256,8 @@ $F_{MSY}$
 
 While the 2024 stock assessment produced high estimates of potential
 catch under the third tier of the harvest control rule—exceeding 4,900
-kt based on $F_{MSY}$—this result was considered unrealistic. That was due to
+kt based on $F_{MSY}$—this result was considered unrealistic under current 
+fleet capacities. That was due to
 likely upward bias in $F_{{MSY}}$ estimates caused by strong selection
 on older fish. As a result, the Scientific Committee recommended
 constraining the 2025 TAC to be at or below 1,428 kt, representing only
@@ -261,14 +269,13 @@ short-term variability or cohort effects, ensuring more stable and
 precautionary management advice consistent with the MSE framework
 (@fig-ref_pts).
 
-![Distribution of reference points from the operating model accepted by
-the workshop.](images/ref_pts.png){#fig-ref_pts}
+![Distribution of reference points from the operating model discussed
+during the workshop.](images/ref_pts.png){#fig-ref_pts}
 
-Several issues were identified with the current stock assessment that
-warrant further attention ahead of the next benchmark. Key among them
-are uncertainties in catch-at-age data stemming from differences in age
-determination methods across laboratories, as well as assumptions about
-mean body weight at age. The Scientific Committee emphasized the need
+Some issues were identified with the current stock assessment that
+warrant further attention ahead of the next benchmark. Among them
+are assumptions about mean body weight at age (specifically in the 
+last year with incomplete data). The Scientific Committee emphasized the need
 for standardizing CPUE indices and improving data collection protocols,
 particularly regarding fleet-specific efficiency changes. Sensitivities
 to early age composition data—especially from the pre-1990 period—remain
@@ -541,6 +548,8 @@ any other MSE framework as well.
 
     -   Functions like `cpuescore2.ind` and `cpuescore3.ind` could
         better reflect their purpose.
+        
+-   Include the current harvest control rule (Annex K modified) and alternative HCRs.
 
 ### MSE Development Timeline and Deliverables
 
@@ -689,14 +698,14 @@ years.
 
 ### For the SC:
 
--   Adopt the current proposal structure with flexibility for future
+-   Adopt the current proposal structure (timeline and deliverables) with flexibility for future
     adjustment.
 
--   Recommend a shortlist of MP options to simplify the selection
+-   Continue the review process to identify a shortlist of MP options to simplify the selection
     process at the Commission level.
 
--   Consider a placeholder method for calculating the 2026 TAC if MSE
-    work is not yet finalized.
+-   Consider a placeholder method for calculating the 2026 TAC since MSE
+    work requires further development. 
 
 ### For Members:
 
