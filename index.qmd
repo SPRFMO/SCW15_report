@@ -1,6 +1,6 @@
 ---
-title: "Report of the Management Strategy Evaluation (MSE) workshop, July 14-18, 2025"
-bibliography: references.bib  
+title: "SC13 - JM09  Report of the Management Strategy Evaluation (MSE) workshop (SCW15), July 14-18, 2025"
+bibliography: references.bib
 format:
   html:
     toc: true
@@ -14,19 +14,42 @@ format:
     fig-width: 7
     embed-resources: true
     reference-location: margin
+    css: styles.css
+
   pdf:
     documentclass: scrreprt
-    papersize: letter
+    papersize: A4
+    include-in-header:
+      - text: |
+          % prevent LaTeX from printing the default title block
+          \makeatletter
+          \renewcommand{\maketitle}{}
+          \makeatother
+    include-before-body:
+      - text: |
+          \begin{titlepage}
+          \thispagestyle{empty}
+          \centering
+          \vspace*{3cm}
+          \includegraphics[width=1.0\textwidth]{images/Header.pdf} \par
+          \vspace{2cm}
+          {\Large\bfseries SC13 - JM09  Report of the Management Strategy Evaluation (MSE) workshop (SCW15), July 14-18, 2025 \par}
+          \vspace{1cm}
+          \vfill
+          {\large September 2025 \par}
+          \end{titlepage}
   epub: default
-  docx: 
+  docx:
     reference-docx: "template.docx"
-editor_options: 
+
+resources:
+  - images/Header.png
+editor_options:
   chunk_output_type: console
-editor: 
-  markdown: 
+editor:
+  markdown:
     wrap: 72
 ---
-
 # Summary
 
 The Jack Mackerel Management Strategy Evaluation (MSE) Technical
